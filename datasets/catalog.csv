@@ -1,0 +1,4 @@
+use_case,expected_path,forecast_target,input_features,cadence,forecast_horizon,split,status
+river-flow,datasets/river-flow/Tejo_system_45.csv,almourol_discharge,"castelo_bode_discharge;fratel_discharge",daily,3 days,80/20 chronological,exact file not yet deposited
+smart-home-energy,datasets/smart-home-energy/HomeC_selected.csv,energy_consumption,energy_consumption,hourly after resampling,3 hours,80/20 chronological,exact file not yet deposited
+solar-power,datasets/solar-power/solar_generation.csv,DC_POWER,"ambient_temperature;module_temperature;irradiation",hourly after resampling,3 hours,80/20 chronological,exact file not yet deposited
