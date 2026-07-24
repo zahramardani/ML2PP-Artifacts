@@ -34,7 +34,7 @@ Large, restricted, or third-party datasets must not be committed directly. Add m
 
 ## Related implementation
 
-The principal implementation is maintained in [`ML-QuadratPP`](https://github.com/arminmoin/ML-QuadratPP). Thesis results should reference the exact implementation revision used. The pinned revision is:
+The principal implementation is maintained in [`ML-QuadratPP`](https://github.com/micss-lab/ML-QuadratPP). Thesis results should reference the exact implementation revision used. The pinned revision is:
 
 `4253f75e7f3b3f94620d79e672e4db52b477d32c`
 
