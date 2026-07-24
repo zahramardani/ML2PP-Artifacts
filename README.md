@@ -1,6 +1,6 @@
 # ML2++ Research Artifacts
 
-Research artifacts for **ML2++: Model-Driven Engineering for Time-Series Forecasting in IoT and Cyber-Physical Systems**.
+Research artifacts for **ML2++: A Model-Driven Engineering Framework for Time-Series Forecasting in IoT and Cyber-Physical Systems**.
 
 ML2++ is a domain-specific modeling language and model-driven engineering framework for defining time-series forecasting workflows in IoT and cyber-physical systems. It provides textual and graphical editors based on a shared metamodel and generates executable forecasting artifacts.
 
