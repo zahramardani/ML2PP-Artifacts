@@ -1,0 +1,10 @@
+usecase: solar-power
+cadence: hourly
+inputs: [ac_power]
+target: ac_power
+n_in: 24
+n_out: 2
+models:
+  - XGBoost: {max_depth: 6, learning_rate: 0.1, n_estimators: 200}
+  - Prophet: {daily_seasonality: true, weekly_seasonality: true}
+
