@@ -1,0 +1,12 @@
+usecase: river-flow
+cadence: daily
+inputs: [disch1, disch2, disch3]
+target: disch3
+n_in: 20
+n_out: 3
+models: [LSTM, GRU]
+preprocessing:
+  common_period: true
+  interpolate_limit: 10
+  scaling_fit: training_only
+
