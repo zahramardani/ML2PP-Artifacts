@@ -1,0 +1,496 @@
+% Extracted verbatim from the revised dissertation source.
+% This is an instrument fragment, not participant-response data.
+% The \rev command may be defined as identity when compiled separately.
+
+\chapter{Questionnaire Instruments}
+\label{app:questionnaire_instruments}
+
+This appendix reports the questionnaire instruments used in the empirical evaluation. The instruments are included to improve transparency, reproducibility, and traceability between the research questions, the collected evidence, and the reported results. The questionnaires were organized according to the evaluation stages. Stage~1 captured the manual Python baseline, Stage~2 captured IoT-template reuse, Stage~3 captured ML2++ textual/modeling experience, and Stage~4 captured the broader Quick-Start Editor tutorial and questionnaire study.
+
+The questionnaires were reviewed by expert researchers and professors before distribution. The review focused on content relevance, clarity of wording, scale interpretation, participant burden, and alignment with the evaluation objectives.
+
+% ============================================================
+\section{Stage~1 Questionnaire: Manual Python Workflow}
+\label{app:stage1_questionnaire}
+
+The Stage~1 questionnaire was designed to evaluate the burden of manually developing forecasting workflows in Python. It captured participant background, programming and forecasting expertise, implementation time, lines of code, task completion, workflow-step difficulty, time spent per step, and open feedback.
+
+\subsection{Instructions and Assignment}
+\label{app:stage1_instructions}
+
+\begin{itemize}[leftmargin=*]
+    \item User Study -- Manual Python Workflow (Method 1 Only).
+    \item Instructions: Fill Section A once. For Section B, answer per use case. Duplicate Section B if you completed multiple use cases.
+    \item Participant ID.
+    \item Assignment: Method 1 (Manual Python).
+    \item Use case(s) worked on:
+    \begin{itemize}
+        \item U1 River Flow
+        \item U2 Smart-Home Energy
+        \item U3 Solar Energy
+    \end{itemize}
+\end{itemize}
+
+\subsection{Section A: Background}
+\label{app:stage1_background_questions}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{A1. Educational level (highest completed).}
+    \begin{itemize}
+        \item High School
+        \item Vocational/Technical
+        \item Bachelor's
+        \item Master's
+        \item Doctorate
+        \item Other
+    \end{itemize}
+
+    \item \textbf{A2. Primary role (pick the closest).}
+    \begin{itemize}
+        \item IoT/CPS Developer
+        \item Data Scientist / ML Engineer
+        \item Embedded SW Engineer
+        \item Educator / Researcher
+        \item Software Architect / Full-stack
+        \item System Integrator
+        \item Other
+    \end{itemize}
+
+    \item \textbf{A3. Self-rated expertise.}
+    Participants rated each row using: Beginner, Intermediate, Advanced, Expert.
+    \begin{itemize}
+        \item Python programming
+        \item Time-series / ML
+        \item Domain knowledge for the selected use case
+    \end{itemize}
+
+    \item \textbf{A4. Prior experience.}
+    Used ML frameworks/libraries before?
+    \begin{itemize}
+        \item Yes
+        \item No
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Section B: Task-Specific Questions}
+\label{app:stage1_task_questions}
+
+This section was completed per use case. \emph{Note on item numbering: the administered form evolved across two working versions whose item sequences overlapped, both numbered from B1. They are consolidated here into a single B1--B8 sequence, preserving every distinct item. The two non-matching five-item difficulty checklists in the source (one keyed to ``Whole workflow / Data preprocessing / Feature engineering / Model training / Model evaluation'', the other to ``Preprocessing / Model configuration / Training / Evaluation / Plotting-Diagnostics'') covered the same construct under different wording and are merged into the single completion/difficulty pair (B4/B5), keyed to the step names used in the analysis of Chapter~\ref{sec:eval_overview}.}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{B1. Use case.}
+    \begin{itemize}
+        \item U1 River Flow
+        \item U2 Smart-Home Energy
+        \item U3 Solar Energy
+    \end{itemize}
+
+    \item \textbf{B2. Lines of code.}
+    Manual Python LoC, excluding blanks and comments.
+
+    \item \textbf{B3. Completion.}
+    Were you able to finish the use case with Manual Python?
+    \begin{itemize}
+        \item None
+        \item Partial
+        \item Complete
+    \end{itemize}
+
+    \item \textbf{B4. Which steps did you complete?}
+    \begin{itemize}
+        \item Preprocessing
+        \item Model configuration
+        \item Training
+        \item Evaluation
+        \item Plotting/Diagnostics
+    \end{itemize}
+
+    \item \textbf{B5. How difficult was each step?}
+    Scale: 1 = Very easy, 5 = Very difficult.
+    \begin{itemize}
+        \item Preprocessing
+        \item Model configuration
+        \item Training
+        \item Evaluation
+        \item Plotting/Diagnostics
+    \end{itemize}
+
+    \item \textbf{B6. Time spent per step.}
+    Participants recorded start time, end time, and minutes for:
+    \begin{itemize}
+        \item Preprocessing
+        \item Model configuration
+        \item Training
+        \item Evaluation (metrics/baseline)
+        \item Plotting / Diagnostics
+        \item Debugging (errors, crashes, outputs)
+        \item Extra learning / searching / documentation
+        \item Total
+    \end{itemize}
+    This item is the source of the per-step Stage~1 timings reported in Table~\ref{tab:s1s2}.
+
+    \item \textbf{B7. Notes.}
+    Issues, decisions, or gaps to revisit.
+
+    \item \textbf{B8. Comments.}
+    Bugs, friction points, and ideas.
+\end{enumerate}
+
+\subsection{Stage~1 Scale Notes}
+\label{app:stage1_scale_notes}
+
+Learning includes reading documentation, web searches, tutorials, setup notes, and guides. Debugging covers error fixing, crashes, failed runs, and investigating unexpected results.
+
+% ============================================================
+\section{Stage~2 Questionnaire: IoT Use-Case Template Reuse}
+\label{app:stage2_questionnaire}
+
+The Stage~2 questionnaire evaluated the experience of reusing a provided IoT pipeline template and adapting it to the participant's use case.
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{E1. Template Understanding.}
+    How clear was the IoT pipeline template, including overview, scripts, and execution order?
+    \begin{itemize}
+        \item 1 = Very unclear
+        \item 2 = Unclear
+        \item 3 = Neutral
+        \item 4 = Clear
+        \item 5 = Very clear
+    \end{itemize}
+
+    \item \textbf{E2. Adaptation Effort.}
+    How easy was it to adapt the template to your chosen use case?
+    \begin{itemize}
+        \item 1 = Very difficult
+        \item 2 = Difficult
+        \item 3 = Neutral
+        \item 4 = Easy
+        \item 5 = Very easy
+    \end{itemize}
+
+    \item \textbf{E3. Reuse of Offline Training Code.}
+    How straightforward was it to reuse the provided offline training code with your dataset?
+    \begin{itemize}
+        \item 1 = Not at all
+        \item 2 = A little
+        \item 3 = Neutral
+        \item 4 = Mostly
+        \item 5 = Very straightforward
+    \end{itemize}
+
+    \item \textbf{E4. Time and Effort (minutes).}
+    \begin{itemize}
+        \item Understanding the template
+        \item Adapting scripts, including sensors, gateway, and analytics
+        \item Running the end-to-end pipeline
+    \end{itemize}
+    This item is the source of the Stage~2 timings reported in Table~\ref{tab:s1s2}.
+
+    \item \textbf{E5. Problems and Debugging.}
+    \begin{itemize}
+        \item Did you face errors while reusing the template? Yes / No.
+        \item If yes, briefly describe the main issues.
+        \item How difficult were they to fix?
+        \begin{itemize}
+            \item 1 = Very easy
+            \item 2 = Easy
+            \item 3 = Neutral
+            \item 4 = Hard
+            \item 5 = Very hard
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{E6. Usefulness.}
+    How useful was the template for accelerating your implementation?
+    \begin{itemize}
+        \item 1 = Not useful
+        \item 2 = Slightly useful
+        \item 3 = Neutral
+        \item 4 = Useful
+        \item 5 = Very useful
+    \end{itemize}
+
+    \item \textbf{E7. Suggested Improvements.}
+    What changes would make the IoT template easier to reuse for future use cases?
+\end{enumerate}
+
+\subsection{Stage~2 Scale Notes}
+\label{app:stage2_scale_notes}
+
+For template clarity, adaptation ease, offline-code reuse, and usefulness, higher values indicate a better experience. For problem-fixing difficulty, higher values indicate greater difficulty.
+
+% ============================================================
+\section{Stage~3 Questionnaire: ML2++ Textual DSL}
+\label{app:stage3_questionnaire}
+
+The Stage~3 questionnaire evaluated participant experience using ML2++ as a textual/model-driven approach. Participants used a pre-built ML2++ model and clicked through the workflow: Save Model, Generate Code, Run Code, and Show Forecasting Plots.
+
+\emph{Note on item coding: the numbering below follows the B1--B15/C1 coding used in Table~\ref{tab:stage3}. Three codes in that table, B1 (time and effort), B2 (DSL line count), and B12 (debugging time), do not correspond to a self-report item below; they were captured through session logs and the saved model file rather than through a questionnaire question. This also explains why B8 does not appear as a quantitative row in Table~\ref{tab:stage3}: it corresponds to the open-text B6 item below (``hardest part to learn''), which appears in the qualitative analysis of Section~\ref{subsec:stage3_results} rather than as a quantitative table row.}
+
+\subsection{Instructions and Background}
+\label{app:stage3_background_questions}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Participant ID.}
+    \item \textbf{Use case(s).}
+    \begin{itemize}
+        \item U1 River Flow
+        \item U2 Smart-Home Energy
+        \item U3 Solar Energy
+    \end{itemize}
+
+    \item \textbf{A1. Educational level (highest completed).}
+    \begin{itemize}
+        \item High School
+        \item Vocational/Technical
+        \item Bachelor's
+        \item Master's
+        \item Doctorate
+        \item Other
+    \end{itemize}
+
+    \item \textbf{A2. Primary role.}
+    \begin{itemize}
+        \item IoT/CPS Developer
+        \item MDE Practitioner
+        \item Data Scientist / ML Engineer
+        \item Embedded SW Engineer
+        \item Educator / Researcher
+        \item Software Architect / Full-stack
+        \item System Integrator
+        \item Early Adopter / Innovator
+        \item Other
+    \end{itemize}
+
+    \item \textbf{A3. Self-rated expertise.}
+    Participants rated each row using Beginner, Intermediate, Advanced, Expert.
+    \begin{itemize}
+        \item IoT/CPS development
+        \item Model-Driven Engineering (MDE)
+        \item Machine Learning / Data Science
+    \end{itemize}
+
+    \item \textbf{A4. Prior experience.}
+    Used DSLs, modeling tools, or ML frameworks before? Yes / No.
+\end{enumerate}
+
+\subsection{Task-Specific Questions}
+\label{app:stage3_task_questions}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{B3. Task completion.}
+    Were you able to finish the use case?
+    \begin{itemize}
+        \item None
+        \item Partial
+        \item Complete
+    \end{itemize}
+
+    \item \textbf{B4. Ease by workflow step.}
+    Scale: 1 = Very easy, 5 = Very difficult.
+    \begin{itemize}
+        \item Whole workflow end-to-end
+        \item Data preprocessing (preview/EDA)
+        \item Model configuration (preset options)
+        \item Run/Execution (logs understanding) -- reported in Table~\ref{tab:stage3} under ``Model training''
+        \item Model evaluation (metrics/plots)
+    \end{itemize}
+
+    \item \textbf{B5. Ease of ML2++ elements.}
+    Scale: 1 = Very easy, 5 = Very difficult.
+    \begin{itemize}
+        \item Data types and objects
+        \item Things and behaviours (statecharts)
+        \item Ports and properties
+        \item Preset model configuration options
+        \item Configuration (instances/connectors)
+    \end{itemize}
+
+    \item \textbf{B6. Learning curve.}
+    Scale: 1 = Very easy, 5 = Very difficult.
+
+    \item \textbf{B7. Intuitiveness.}
+    Scale: 1 = Very intuitive, 5 = Not intuitive.
+
+    \item \textbf{B8. Hardest part to learn.}
+    Brief open-text response. This is the source of the qualitative finding, discussed in Section~\ref{subsec:stage3_results}, that authoring the model instance, rather than preprocessing or evaluation, was consistently identified as the hardest part of the workflow.
+
+    \item \textbf{B9. Error frequency.}
+    \begin{itemize}
+        \item 0 = None
+        \item 1 = Few
+        \item 2 = Moderate
+        \item 3 = Many
+    \end{itemize}
+
+    \item \textbf{B10. Clarity of error messages.}
+    Scale: 1 = Not clear, 5 = Very clear.
+
+    \item \textbf{B11. Debugging effort.}
+    Scale: 1 = Easy, 5 = Hard.
+
+    \item \textbf{B13. Generated code quality.}
+    Scale: 1 = Poor, 5 = Excellent.
+
+    \item \textbf{B14. Maintainability.}
+    Scale: 1 = Very difficult, 5 = Very easy.
+
+    \item \textbf{B15. Flexibility / Customisation.}
+    Scale: 1 = None, 5 = Very flexible.
+\end{enumerate}
+
+\subsection{Overall Assessment}
+\label{app:stage3_overall_questions}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{C1. Overall satisfaction.}
+    Scale: 1 = Very dissatisfied, 5 = Very satisfied.
+
+    \item \textbf{C2. Future use.}
+    Would you use ML2++ for your next similar project?
+    \begin{itemize}
+        \item Yes
+        \item No
+        \item Undecided
+        \item Why?
+    \end{itemize}
+
+    \item \textbf{C3. Feature effectiveness.}
+    Scale: 1 = Ineffective, 5 = Very effective.
+    \begin{itemize}
+        \item Time-series forecasting models
+        \item Automatic preprocessing and plots
+        \item Training configuration options
+        \item Multi-day forecasting accuracy
+    \end{itemize}
+
+    \item \textbf{C4. Favourite feature.}
+    Open-text response.
+
+    \item \textbf{C5. Least favourite feature.}
+    Open-text response.
+
+    \item \textbf{C6. Missing features.}
+    Open-text response.
+\end{enumerate}
+
+\subsection{Open Feedback}
+\label{app:stage3_open_feedback}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{D1. Barriers to adoption.}
+    What would stop you from using ML2++ in production?
+
+    \item \textbf{D2. Improvement priority.}
+    One improvement you would prioritize.
+\end{enumerate}
+
+\subsection{Stage~3 Scale Notes}
+\label{app:stage3_scale_notes}
+
+The Stage~3 questionnaire used mixed scale directions. Ease and learning items use 1 = very easy and 5 = very difficult. Intuitiveness uses 1 = very intuitive and 5 = not intuitive. Error clarity, code quality, maintainability, flexibility, and feature effectiveness use positively oriented scales where higher values indicate a stronger or more positive judgment. Therefore, each item group should be interpreted according to its own scale direction.
+
+% ============================================================
+\section{Stage~4 Questionnaire: Quick-Start Editor Tutorial Study}
+\label{app:stage4_questionnaire}
+
+The Stage~4 questionnaire was used for the broader Quick-Start Editor tutorial study. The instrument collected participant background, development experience, task-completion data, usability and learnability ratings, pipeline-support ratings, error-handling feedback, visualization feedback, perceived generated-code quality ratings, satisfaction and adoption feedback, workload ratings, and open-ended suggestions.
+
+The following list reports the questionnaire columns extracted from the Stage~4 response spreadsheet.
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Column 1.} Timestamp
+    \item \textbf{Column 2.} Consent (Required): Do you confirm that you are at least 18 and voluntarily consent to participate?
+    \item \textbf{Column 3.} Participant full name \rev{(direct identifier collected in the source form; excluded from the analysis table and not to be included in a public replication package)}
+    \item \textbf{Column 4.} Date: Please select today's date.
+    \item \textbf{Column 5.} Session mode:
+    \item \textbf{Column 6.} Device:
+    \item \textbf{Column 7.} A1 Gender:
+    \item \textbf{Column 8.} A2 Highest completed education:
+    \item \textbf{Column 9.} A3 Primary role:
+    \item \textbf{Column 10.} A4 Experience (select one per row): [Python development]
+    \item \textbf{Column 11.} A4 Experience (select one per row): [Java development]
+    \item \textbf{Column 12.} A4 Experience (select one per row): [Time-series forecasting]
+    \item \textbf{Column 13.} A4 Experience (select one per row): [Textual DSL modeling (e.g., Xtext)]
+    \item \textbf{Column 14.} A4 Experience (select one per row): [Graphical DSL modeling (e.g., Sirius)]
+    \item \textbf{Column 15.} A4 Experience (select one per row): [IoT application development]
+    \item \textbf{Column 16.} A4 Experience (select one per row): [Machine learning]
+    \item \textbf{Column 17.} A4 Experience (select one per row): [Software development]
+    \item \textbf{Column 18.} A5 Number of similar projects:
+    \item \textbf{Column 19.} A6 Total time on similar projects:
+    \item \textbf{Column 20.} A7 Operating system:
+    \item \textbf{Column 21.} A8 Browser:
+    \item \textbf{Column 22.} B1 During the session, were you able to generate code?
+    \item \textbf{Column 23.} B2 During the session, were you able to run the generated code?
+    \item \textbf{Column 24.} B3 During the session, were you able to view the preprocessing plot?
+    \item \textbf{Column 25.} B4 During the session, were you able to view the forecasting plots?
+    \item \textbf{Column 26.} B5 Did you experience a freeze, crash, or timeout during the tasks?
+    \item \textbf{Column 27.} B6 If you answered ``Yes'' above, briefly describe what happened. If you answered ``No'', write ``N/A''.
+    \item \textbf{Column 28.} B7 Estimated active time (excluding breaks):
+    \item \textbf{Column 29.} C1--C5 Workflow usability: [(C1) The tutorial steps were clear enough to complete the workflow without external help.]
+    \item \textbf{Column 30.} C1--C5 Workflow usability: [(C2) The editor buttons and their effects were clear (Save / Generate / Run / Plots).]
+    \item \textbf{Column 31.} C1--C5 Workflow usability: [(C3) From the console/logs, it was clear which stage was running (preprocess/train/predict).]
+    \item \textbf{Column 32.} C1--C5 Workflow usability: [(C4) The edit \(\rightarrow\) generate \(\rightarrow\) run \(\rightarrow\) inspect cycle was smooth enough for experimentation.]
+    \item \textbf{Column 33.} C1--C5 Workflow usability: [(C5) The allowed safe edits were clear and helped avoid unnecessary invalid configurations.]
+    \item \textbf{Column 34.} C6 Where did you feel the most friction? (choose one)
+    \item \textbf{Column 35.} D1--D7 Learnability: [(D1) The DSL concepts and keywords were meaningful (I understood what blocks/parameters represent).]
+    \item \textbf{Column 36.} D1--D7 Learnability: [(D2) The DSL concepts were easy to learn.]
+    \item \textbf{Column 37.} D1--D7 Learnability: [(D3) After completing the tasks, the DSL concepts were easy to remember.]
+    \item \textbf{Column 38.} D1--D7 Learnability: [(D4) The structure of the IoT model (Things/ports/connectors) was understandable.]
+    \item \textbf{Column 39.} D1--D7 Learnability: [(D5) The structure of the data\_analytics block was understandable.]
+    \item \textbf{Column 40.} D1--D7 Learnability: [(D6) I could follow the message flow between Things (who sends what to whom, and when).]
+    \item \textbf{Column 41.} D1--D7 Learnability: [(D7) ML2++ is suitable for its target users (people building IoT + time-series forecasting workflows).]
+    \item \textbf{Column 42.} E1--E9 Pipeline support: [(E1) The tool handled the provided dataset size with reasonable runtime (no freezes/crashes/timeouts).]
+    \item \textbf{Column 43.} E1--E9 Pipeline support: [(E2) It was clear how inputs/outputs are specified (e.g., features, output\_features, timestamps).]
+    \item \textbf{Column 44.} E1--E9 Pipeline support: [(E3) Preprocessing directives were understandable (e.g., resampling, alignment, missing values).]
+    \item \textbf{Column 45.} E1--E9 Pipeline support: [(E4) Time-series settings were understandable (e.g., horizon/steps, lag window, multivariate, supervised\_learning).]
+    \item \textbf{Column 46.} E1--E9 Pipeline support: [(E5) It was easy to modify forecasting model hyperparameters (e.g., epochs, layers, dropout, optimizer, learning rate).]
+    \item \textbf{Column 47.} E1--E9 Pipeline support: [(E6) It was easy to modify time-series parameters (e.g., steps/horizon, lag length, multivariate, supervised\_learning).]
+    \item \textbf{Column 48.} E1--E9 Pipeline support: [(E7) ML2++ provides sufficient constructs/options for specifying realistic forecasting pipelines (e.g., preprocessing, model definition, evaluation settings).]
+    \item \textbf{Column 49.} E1--E9 Pipeline support: [(E8) ML2++ automated key steps (preprocess \(\rightarrow\) train \(\rightarrow\) predict \(\rightarrow\) visualize).]
+    \item \textbf{Column 50.} E1--E9 Pipeline support: [(E9) After edits, the effect on logs/plots was understandable (changes in runtime, metrics/curves, forecast plots).]
+    \item \textbf{Column 51.} E10 Python-effort comparison: Do you have enough Python experience to judge the next statement?
+    \item \textbf{Column 52.} (E11) Effort comparison: Compared to implementing the same pipeline directly in Python, ML2++ would reduce my effort for repeated experimentation.
+    \item \textbf{Column 53.} F1 Errors: Did you encounter any error during the tasks?
+    \item \textbf{Column 54.} F2--F3 Error messages: [(F2) The error message was clear enough for me to understand what went wrong.]
+    \item \textbf{Column 55.} F2--F3 Error messages: [(F3) The error message helped me decide what to do next (how to fix or proceed).]
+    \item \textbf{Column 56.} F4 Type of problem (rate each): [(F4a) Model/specification problem (e.g., wrong keyword, missing parameter, invalid value).]
+    \item \textbf{Column 57.} F4 Type of problem (rate each): [(F4b) Code generation problem (e.g., Generate failed or produced incomplete/wrong code).]
+    \item \textbf{Column 58.} F4 Type of problem (rate each): [(F4c) Execution/runtime problem (e.g., crash, freeze, timeout, or runtime exception).]
+    \item \textbf{Column 59.} (F5) Recovery: I could fix the problem and continue with the tasks.
+    \item \textbf{Column 60.} (F6) Guidance: Auto-completion/guidance helped me avoid mistakes while editing the model.
+    \item \textbf{Column 61.} G1--G2 Visualization: [(G1) The plots helped me understand data preparation, model training behavior, and forecasting results.]
+    \item \textbf{Column 62.} G1--G2 Visualization: [(G2) It was clear which DSML setting controls which plot (visualization block vs model block).]
+    \item \textbf{Column 63.} G3 Most helpful output (choose one):
+    \item \textbf{Column 64.} G4 Which additional plot/visualization would help you most?
+    \item \textbf{Column 65.} J1--J3 Code quality: [(J1) Generated code quality: The generated code is readable, well-structured, and correct.]
+    \item \textbf{Column 66.} J1--J3 Code quality: [(J2) Maintainability: If I had to update the solution later (e.g., new dataset, new horizon), it would be easy.]
+    \item \textbf{Column 67.} J1--J3 Code quality: [(J3) Flexibility: I can change models/hyperparameters/thresholds or add steps without workarounds.]
+    \item \textbf{Column 68.} H1--H5 Satisfaction: [(H1) Overall, I am satisfied with ML2++ for using a prepared forecasting model.]
+    \item \textbf{Column 69.} H1--H5 Satisfaction: [(H2) Overall, I am satisfied with ML2++ for safe edits and repeated experimentation.]
+    \item \textbf{Column 70.} H1--H5 Satisfaction: [(H3) Overall, I am satisfied with ML2++'s automated visualization support.]
+    \item \textbf{Column 71.} H1--H5 Satisfaction: [(H4) Overall, I am satisfied with ML2++ for generating and running runnable artifacts.]
+    \item \textbf{Column 72.} H1--H5 Satisfaction: [(H5) In the future, I would use ML2++ (or recommend it) for similar forecasting tasks.]
+    \item \textbf{Column 73.} (H6) Suggestions (open comment):
+    \item \textbf{Column 74.} I1 Mental demand: How mentally demanding were the tasks (thinking, deciding, concentrating)? (0--20)
+    \item \textbf{Column 75.} I2 Temporal demand: How much time pressure did you feel while doing the tasks? (0--20)
+    \item \textbf{Column 76.} I3 Effort: How hard did you have to work to accomplish the tasks? (0--20)
+    \item \textbf{Column 77.} I4 Frustration: How irritated, stressed, or annoyed did you feel during the tasks? (0--20)
+    \item \textbf{Column 78.} I5 Performance: How successful were you in accomplishing the tasks? (0 = excellent, 20 = very poor) (0--20)
+    \item \textbf{Column 79.} I6 Physical demand: How physically demanding were the tasks (e.g., fatigue from long sitting)? (0--20)
+\end{enumerate}
+
+\subsection{Stage~4 Scale Notes}
+\label{app:stage4_scale_notes}
+
+The construct items C1--C5, D1--D7, E1--E9, E11, F2--F3, F5--F6, G1--G2, J1--J3, and H1--H5 use a five-point agreement scale: 1 = strongly disagree, 2 = disagree, 3 = neither agree nor disagree, 4 = agree, and 5 = strongly agree. Higher values therefore indicate stronger agreement or a more positive evaluation. The six workload items use a 0--20 scale, where higher values indicate greater burden; the performance item is anchored from 0 = excellent to 20 = very poor so that its direction matches the other burden items. Binary, categorical, and open-text items are analysed separately. Results are therefore reported by construct rather than collapsed into one global questionnaire score.
+
+% ============================================================
+\section{Use of Questionnaire Instruments in the Thesis}
+\label{app:questionnaire_use_in_thesis}
+
+The Stage~1--Stage~3 instruments support the comparative evaluation by measuring effort, task completion, difficulty, debugging, and qualitative feedback across manual coding, template reuse, and ML2++ modeling. The Stage~4 instrument supports the broader user-centered evaluation by measuring workflow usability, learnability, pipeline support, visualization, perceived generated-code quality, satisfaction, workload, and adoption barriers.
+
+Including the full instruments in this appendix improves the traceability of the empirical study and allows readers to verify how each reported construct was operationalized.
+
+% ============================================================
