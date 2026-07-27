@@ -1,0 +1,23 @@
+{
+  "package_status": "incomplete_uploadable_scaffold",
+  "generator_revision_referenced": "4253f75e7f3b3f94620d79e672e4db52b477d32c",
+  "included": {
+    "thesis_transcribed_model_specifications": 6,
+    "reference_specifications": 0,
+    "aggregate_metric_rows": 16,
+    "questionnaire_instrument_appendix": true,
+    "manifest_tools": true
+  },
+  "missing_for_complete_replication": [
+    "byte-exact executed models",
+    "unmodified generated sources",
+    "dataset acquisition records and checksums",
+    "split indices",
+    "random seeds",
+    "dependency locks",
+    "point-level prediction files",
+    "generation and execution logs",
+    "verified run manifests"
+  ],
+  "public_data_boundary": "No participant-level responses or identifiers are included."
+}
