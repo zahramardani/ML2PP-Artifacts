@@ -1,0 +1,58 @@
+// PROVENANCE: transcribed from the revised dissertation listing.
+// STATUS: specification evidence only; replace with the byte-exact executed
+// model before claiming generator or execution provenance.
+
+thing SmartHomeARIMAComponent {
+  property use_kW      : Double
+  property prediction1 : Double
+  property prediction2 : Double
+  property prediction3 : Double
+
+  data_analytics arimaAnalytics @dalib `statsmodels` {
+    data {
+      dataset "data/usecase22_fixed_ddmmyy.csv"
+      features use_kW
+      input_features use_kW
+      output_features use_kW
+      timestamps ON
+    }
+
+    preprocessing {
+      fill_missing INTERPOLATION
+      remove_outliers OFF
+    }
+
+    time_series {
+      sequential TRUE
+      steps 3
+      multivariate OFF
+      stationary_check ON
+      seasonality_detection ON
+      supervised_learning OFF
+      create_lagged_features OFF
+    }
+
+    model {
+      autoML OFF
+      algorithm ARIMA arima_energy(
+        p 1,
+        differencing 1,
+        q 1,
+        trend "n",
+        forecasting_plots FORECAST_VS_ACTUAL
+      )
+      training_results "data/arima_energy_training.txt"
+    }
+
+    evaluation {
+      prediction_results prediction1, prediction2, prediction3
+      metrics RMSE
+    }
+
+    visualization {
+      plots RESIDUAL_ACF_PLOT,
+            RESIDUAL_PACF_PLOT,
+            SEASONAL_DECOMPOSITION_PLOT
+    }
+  }
+}
