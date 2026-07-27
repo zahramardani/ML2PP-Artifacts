@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use these artifacts, please cite the ML2++ dissertation and the relevant publication."
+title: "ML2++ Research Artifacts"
+type: dataset
+authors:
+  - family-names: "Mardani Korani"
+    given-names: "Zahra"
+repository-code: "https://github.com/zahramardani/ML2PP-Artifacts"
+url: "https://github.com/zahramardani/ML2PP-Artifacts"
+abstract: "Research artifacts for ML2++: Model-Driven Engineering for Time-Series Forecasting in IoT and Cyber-Physical Systems."
+keywords:
+  - model-driven engineering
+  - time-series forecasting
+  - IoT
+  - cyber-physical systems
+  - domain-specific modelling language
+license: "LicenseRef-PENDING"
