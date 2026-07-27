@@ -1,0 +1,9 @@
+usecase: smart-home-energy
+cadence: minute
+inputs: [energy]
+target: energy
+n_out: 3
+models:
+  - ARIMA: {order: [1, 1, 1]}
+  - HoltWinters: {trend: additive, damped_trend: true, seasonal: additive, period: 60}
+
