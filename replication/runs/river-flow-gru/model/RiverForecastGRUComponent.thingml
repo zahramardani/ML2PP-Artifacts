@@ -1,0 +1,73 @@
+// PROVENANCE: transcribed from the revised dissertation listing.
+// STATUS: specification evidence only; replace with the byte-exact executed
+// model before claiming generator or execution provenance.
+
+thing RiverForecastGRUComponent {
+  property disch1 : Double
+  property disch2 : Double
+  property disch3 : Double
+
+  property prediction1 : Double
+  property prediction2 : Double
+  property prediction3 : Double
+
+  data_analytics gruAnalytics @dalib `keras-tensorflow` {
+    data {
+      dataset "flow_dataset.csv"
+      features disch1, disch2, disch3
+      input_features disch1, disch2, disch3
+      output_features disch2
+      timestamps ON
+      common_period_threshold 10
+    }
+
+    preprocessing {
+      fill_missing INTERPOLATION
+      resample DAILY
+      remove_outliers OFF
+    }
+
+    time_series {
+      sequential TRUE
+      steps 3
+      lag 20
+      multivariate ON
+      stationary_check ON
+      seasonality_detection ON
+      supervised_learning ON
+      create_lagged_features OFF
+      sliding_window ON
+    }
+
+    model {
+      autoML OFF
+      algorithm GRU executed_gru(
+        return_sequences false,
+        hidden_layer_sizes (64, 64),
+        input_activation tanh,
+        hidden_activation tanh,
+        output_activation linear,
+        dropout 0.2,
+        optimizer adam,
+        rate 0.001,
+        batch_size 32,
+        epochs 100,
+        metrics 'MAE',
+        early_stopping 'enable',
+        overfitting_Plots TRAINING_LOSS,
+        forecasting_plots FORECAST_VS_ACTUAL
+      )
+      training_results "data/executed_gru_river_training.txt"
+      hyperparameter_tuning OFF
+    }
+
+    evaluation {
+      prediction_results prediction1, prediction2, prediction3
+      metrics MSE
+    }
+
+    visualization {
+      plots LINE_PLOT, HEAT_MAP
+    }
+  }
+}
