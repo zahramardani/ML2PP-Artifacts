@@ -20,8 +20,9 @@ documents six configurations reported as executed end to end:
 | Solar-power forecasting | XGBoost, Prophet |
 
 The repository includes thesis-transcribed model specifications, aggregate
-reported metrics, questionnaire instruments, provenance notes, and
-manifest/checksum tools. It does **not yet** include all byte-exact executed
+reported metrics, questionnaire instruments, provenance notes,
+manifest/checksum tools, and runnable Python reference workflows for the
+three thesis use cases. It does **not yet** include all byte-exact executed
 models, generated sources, exact dataset snapshots or acquisition records,
 dependency locks, point-level predictions, execution logs, and verified run
 manifests. Therefore it must not yet be described as a complete numerical
@@ -43,6 +44,9 @@ replication package.
   hash-verification utilities
 - [`datasets/`](datasets/): dataset specifications and legal/provenance
   requirements
+- [`USE_CASES.md`](USE_CASES.md): thesis-to-artifact map for all three domains
+- [`examples/python/`](examples/python/): runnable Python reference workflows,
+  synthetic-data fallbacks, configurations, metrics, plots, and tests
 
 ## Pinned implementation revision
 
