@@ -1,0 +1,11 @@
+# Confirm every version from the original execution environment before use.
+# The dissertation/project records identify Python 3.8.19 and TensorFlow 2.2.0.
+tensorflow==2.2.0
+numpy
+pandas
+scikit-learn
+statsmodels
+xgboost
+prophet
+matplotlib
+seaborn
