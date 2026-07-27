@@ -1,0 +1,61 @@
+// PROVENANCE: transcribed from the revised dissertation listing.
+// STATUS: specification evidence only; replace with the byte-exact executed
+// model before claiming generator or execution provenance.
+
+thing SmartHomeHoltWintersComponent {
+  property use_kW      : Double
+  property prediction1 : Double
+  property prediction2 : Double
+  property prediction3 : Double
+
+  data_analytics hwAnalytics @dalib `statsmodels` {
+    data {
+      dataset "data/usecase22_fixed_ddmmyy.csv"
+      features use_kW
+      input_features use_kW
+      output_features use_kW
+      timestamps ON
+    }
+
+    preprocessing {
+      fill_missing INTERPOLATION
+      remove_outliers OFF
+    }
+
+    time_series {
+      sequential TRUE
+      steps 3
+      multivariate OFF
+      stationary_check ON
+      seasonality_detection ON
+      supervised_learning OFF
+      create_lagged_features OFF
+    }
+
+    model {
+      autoML OFF
+      algorithm HWES holt_winters_energy(
+        trend "add",
+        damped true,
+        seasonal "add",
+        seasonal_periods 60,
+        initialization_method "heuristic",
+        use_boxcox false,
+        remove_bias false,
+        forecasting_plots FORECAST_VS_ACTUAL
+      )
+      training_results "data/holt_winters_energy_training.txt"
+    }
+
+    evaluation {
+      prediction_results prediction1, prediction2, prediction3
+      metrics RMSE
+    }
+
+    visualization {
+      plots RESIDUAL_ACF_PLOT,
+            RESIDUAL_PACF_PLOT,
+            SEASONAL_DECOMPOSITION_PLOT
+    }
+  }
+}
