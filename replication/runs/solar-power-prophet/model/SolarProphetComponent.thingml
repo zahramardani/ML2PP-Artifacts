@@ -1,0 +1,57 @@
+// PROVENANCE: transcribed from the revised dissertation listing.
+// STATUS: end-to-end configuration reported as executed in the dissertation.
+// This is not asserted to be the byte-exact executed source.
+
+thing SolarProphetComponent {
+  property DC_POWER    : Double
+  property prediction1 : Double
+  property prediction2 : Double
+
+  data_analytics prophetAnalytics @dalib `prophet` {
+    data {
+      dataset "data/solar_generation_hourly.csv"
+      features DC_POWER
+      input_features DC_POWER
+      output_features DC_POWER
+      timestamps ON
+    }
+
+    preprocessing {
+      fill_missing INTERPOLATION
+      remove_outliers OFF
+    }
+
+    time_series {
+      sequential TRUE
+      steps 2
+      multivariate OFF
+      stationary_check ON
+      seasonality_detection ON
+      supervised_learning OFF
+      create_lagged_features OFF
+    }
+
+    model {
+      autoML OFF
+      algorithm Prophet prophet_solar(
+        growth "linear",
+        seasonality_mode "additive",
+        seasonality_prior_scale 10.0,
+        holidays_prior_scale 10.0,
+        changepoint_prior_scale 0.05,
+        interval_width 0.8,
+        forecasting_plots FORECAST_VS_ACTUAL
+      )
+      training_results "data/prophet_solar_training.txt"
+    }
+
+    evaluation {
+      prediction_results prediction1, prediction2
+      metrics RMSE
+    }
+
+    visualization {
+      plots LINE_PLOT, LAG_PLOT, AUTOCORRELATION_PLOT
+    }
+  }
+}
