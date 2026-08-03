@@ -1,42 +1,22 @@
-# River-flow dataset
+# Use Case 1 - SNIRH river-flow dataset
 
-## Thesis file
+## Checked processed file (publication pending)
 
-`Tejo_system_45.csv`
+`use_case_1_river_flow_observed.csv`
 
-## Scope
+- 13,715 observed daily midnight timestamps
+- period: 30 December 1984 through 6 August 2022
+- variables: `disch1`, `disch2`, `disch3`
+- 19 absent timestamps relative to a complete 13,734-day index
+- forecast look-back: 20 days
+- forecast horizon: three days
+- executed model families: LSTM and GRU
+- source: https://snirh.apambiente.pt/
 
-- Period: 13 January 2003 to 20 March 2004
-- Observations: 433 daily timestamps
-- Input stations: Castelo de Bode and Fratel
-- Forecast target: Almourol
-- Physical variable: river discharge
-- Expected unit: m³/s (verify against the original export)
-- Forecast horizon: three days
-- Look-back window: 20 daily observations
-- Split: 80% training / 20% test, in chronological order
+The supplied file contained six non-daily test rows dated 9 July 2025 and three empty columns. They were excluded from the checked, execution-aligned input. Observed scientific values were not altered. The PDF data card is public; the CSV is prepared locally pending explicit redistribution confirmation.
 
-## Required logical schema
+## Provenance boundary
 
-| ML2++ role | Canonical name |
-|---|---|
-| Timestamp | timestamp |
-| Input | castelo_bode_discharge |
-| Input | fratel_discharge |
-| Target | almourol_discharge |
+The processed file does not retain the station codes or measurement unit. The intended scenario mentions Albufeira da Aguieira (11H/01A), Albufeira da Raiva (12H/01A), Albufeira de Fronhas (12I/01A), and Acude Ponte de Coimbra (12G/01AE), but no `disch`-column-to-station mapping is claimed.
 
-The original column labels may differ. Preserve the original file and document any canonical renaming in a preprocessing script.
-
-## Thesis preprocessing
-
-1. Parse and sort timestamps.
-2. Align the three station series over their common period.
-3. Resample to daily cadence if required.
-4. Fill missing observations using interpolation and backward filling as reported by the retained implementation.
-5. Apply the chronological 80/20 split.
-6. Fit preprocessing operations on the training partition only.
-7. Construct 20-step input windows and three-step targets.
-
-## Availability
-
-The exact CSV is not currently deposited. It appears to originate from the Portuguese hydrological application context associated with LNEC/SNIRH. Confirm the exact owner, export query, and redistribution permission before committing it. If redistribution is restricted, provide an acquisition/export script or query record plus a checksum instead.
+The thesis narrative describes the third series as target, while an inspected executable listing declares `output_features disch2`. This must be resolved before claiming exact target-level reproduction. The PDF data card documents the issue explicitly.

@@ -1,28 +1,17 @@
-# ML2++ datasets
+# ML2++ validation datasets
 
-This directory documents the datasets used by the three ML2++ technical-validation use cases.
+This directory documents the checked processed CSV inputs used by the three thesis technical-validation use cases and provides one-page PDF data cards. Public deposition of the CSV bytes is pending explicit confirmation of redistribution permission; the source links remain authoritative for the original data cards and applicable terms.
 
-## Dataset catalogue
+| Use case | Processed file | Cadence | Target | Documentation | Original source |
+|---|---|---|---|---|---|
+| River-flow forecasting | `use_case_1_river_flow_observed.csv` (prepared; not yet public) | Daily | Generic discharge series; target inconsistency must be resolved | `river-flow/use_case_1_river_flow.pdf` | [Portuguese SNIRH](https://snirh.apambiente.pt/) |
+| Smart-home energy forecasting | `use_case_2_smart_home_energy.csv` (prepared; not yet public) | One minute | `use_kW` | `smart-home-energy/use_case_2_smart_home_energy.pdf` | [Kaggle data card](https://www.kaggle.com/datasets/taranvee/smart-home-dataset-with-weather-information) |
+| Solar-power forecasting | `use_case_3_solar_power_hourly.csv` (prepared; not yet public) | Hourly | `DC_POWER` | `solar-power/use_case_3_solar_power.pdf` | [Kaggle data card](https://www.kaggle.com/datasets/anikannal/solar-power-generation-data) |
 
-| Use case | Expected file | Status in this repository | Target | Cadence |
-|---|---|---|---|---|
-| River-flow forecasting | `river-flow/Tejo_system_45.csv` | Raw file not yet deposited | Almourol discharge | Daily |
-| Smart-home energy forecasting | `smart-home-energy/HomeC_selected.csv` | Raw file not yet deposited | Household energy consumption | Hourly after resampling |
-| Solar-power forecasting | `solar-power/solar_generation.csv` | Exact thesis file not yet deposited | DC power | Hourly after resampling |
+## Validation outcome
 
-The exact raw/processed CSV files were not present in the retained workspace used to prepare this repository. Similar sample files must not be renamed or presented as the thesis datasets. Add each exact file only after its provenance and redistribution permission have been verified.
+- River: 13,715 observed midnight records before 7 August 2022. A complete daily index contains 13,734 timestamps, so 19 calendar dates are absent. Six non-daily test rows dated 9 July 2025 and three empty columns found in the supplied file were excluded.
+- Smart home: 4,200 observations from 1 January 2016 05:00 through 4 January 2016 02:59, with a complete one-minute sequence and no missing values or duplicate timestamps.
+- Solar: 796 observed hourly records from 15 May through 17 June 2020. A complete hourly index has 816 timestamps, revealing 20 absent hours. Night-time zero production is preserved.
 
-## Required evidence when adding a dataset
-
-For each deposited file, record:
-
-1. original source and data owner;
-2. acquisition or export date;
-3. licence or redistribution permission;
-4. original and processed filenames;
-5. column names, units, timestamp format, and timezone;
-6. preprocessing history;
-7. chronological train/test indices;
-8. SHA-256 checksum.
-
-The detailed specifications are in the three use-case subdirectories.
+The three CSVs have been checked locally and SHA-256 checksums recorded. They are processed research subsets and should be published only after redistribution permission is confirmed.

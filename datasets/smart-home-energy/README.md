@@ -1,37 +1,16 @@
-# Smart-home energy dataset
+# Use Case 2 - smart-home energy dataset
 
-## Thesis file
+## Checked processed file (publication pending)
 
-`HomeC_selected.csv`
+`use_case_2_smart_home_energy.csv`
 
-## Scope
+- 4,200 one-minute observations
+- period: 1 January 2016 05:00 through 4 January 2016 02:59
+- target: `use_kW`, derived from the source variable `use [kW]`
+- range: 0.13 to 0.96 kW; mean approximately 0.611 kW
+- no missing timestamps, missing target values, or duplicate timestamps
+- forecast horizon: three minutes
+- executed model families: ARIMA(1,1,1) and additive Holt-Winters
+- source: https://www.kaggle.com/datasets/taranvee/smart-home-dataset-with-weather-information
 
-- Domain: residential/household energy consumption
-- Forecast target: `energy_consumption`
-- Input: historical `energy_consumption`
-- Technical-validation cadence: hourly after resampling
-- Forecast horizon: three hourly steps
-- Split: 80% training / 20% test, in chronological order
-- Model configuration: SARIMA with seasonal period 24
-
-## Required logical schema
-
-| ML2++ role | Canonical name |
-|---|---|
-| Timestamp | timestamp |
-| Input and target | energy_consumption |
-
-## Thesis preprocessing
-
-1. Parse and sort timestamps.
-2. Resample the selected consumption series to hourly cadence.
-3. Interpolate short missing intervals.
-4. Preserve chronological order.
-5. Apply the chronological 80/20 split.
-6. Run stationarity and seasonality diagnostics.
-
-The hourly technical-validation configuration is distinct from the minute-level configuration used by some participants in the staged evaluation. They must not be mixed or described as the same execution.
-
-## Availability
-
-The exact selected CSV is not currently deposited. Before adding it, identify the original household-energy source, selection procedure, original variable name and unit, time range, timezone, and redistribution licence. Deposit either the lawful processed file with provenance or exact acquisition and transformation instructions.
+The thesis uses a chronological 80/20 split: 3,360 fitting observations and 840 held-out observations, yielding 838 complete three-step test origins. Holt-Winters uses a 60-observation seasonal cycle. The subset spans only about 70 hours, so it does not support a reliable 1,440-minute daily-seasonality benchmark. The PDF data card is public; the CSV is prepared locally pending explicit redistribution confirmation.

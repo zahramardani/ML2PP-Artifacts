@@ -1,41 +1,18 @@
-# Solar-power dataset
+# Use Case 3 - solar-power dataset
 
-## Thesis file
+## Checked processed file (publication pending)
 
-`solar_generation.csv`
+`use_case_3_solar_power_hourly.csv`
 
-## Scope
+- 796 observed hourly timestamps
+- period: 15 May through 17 June 2020
+- target: `DC_POWER`
+- 20 absent timestamps relative to a complete 816-hour index
+- 358 physical zero observations retained
+- forecast horizon: two hours
+- executed model families: XGBoost and Prophet
+- source: https://www.kaggle.com/datasets/anikannal/solar-power-generation-data
 
-- Domain: photovoltaic generation
-- Inputs: ambient temperature, module temperature, and irradiation
-- Forecast target: DC power
-- Technical-validation cadence: hourly after resampling
-- Forecast horizon: three hourly steps
-- Look-back window: 20 observations
-- Split: 80% training / 20% test, in chronological order
-- Model configuration: XGBoost, random state 42
+The target is the arithmetic hourly mean of available Plant 1 inverter-level `DC_POWER` observations. It is not total plant energy and not grid-injected AC power.
 
-## Required logical schema
-
-| ML2++ role | Canonical name |
-|---|---|
-| Timestamp | timestamp |
-| Input | ambient_temperature |
-| Input | module_temperature |
-| Input | irradiation |
-| Target | DC_POWER |
-
-## Thesis preprocessing
-
-1. Parse and sort timestamps.
-2. Retain night-time zero production as a physically valid observation.
-3. Resample to hourly cadence.
-4. Interpolate short missing intervals.
-5. Apply documented outlier handling.
-6. Create persistent lag and rolling-window features.
-7. Apply the chronological 80/20 split.
-8. Flatten the previous 20 observations for the XGBoost regressor.
-
-## Availability
-
-The exact `solar_generation.csv` used by the thesis is not currently deposited. A file named `Plant_1_Generation_Data_seconds.csv` exists in the broader implementation checkout, but its schema and identity do not match the four-variable thesis declaration; it must not be substituted without a documented, reproducible join/transformation and provenance check. Confirm the original source and redistribution licence before adding the exact dataset.
+The thesis preprocessing fills consistently non-producing night-time gaps with zero, interpolates short daytime gaps, and applies forward/backward propagation to remaining gaps. Because two-sided interpolation and backward filling can use future information, the reported results are retrospective positive-path validation rather than leakage-free online forecasting evidence. The PDF data card is public; the CSV is prepared locally pending explicit redistribution confirmation.
