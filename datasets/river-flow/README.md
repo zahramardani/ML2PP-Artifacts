@@ -1,6 +1,6 @@
 # Use Case 1 - SNIRH river-flow dataset
 
-## Checked processed file (publication pending)
+## Checked processed file
 
 `use_case_1_river_flow_observed.csv`
 
@@ -13,7 +13,7 @@
 - executed model families: LSTM and GRU
 - source: https://snirh.apambiente.pt/
 
-The supplied file contained six non-daily test rows dated 9 July 2025 and three empty columns. They were excluded from the checked, execution-aligned input. Observed scientific values were not altered. The PDF data card is public; the CSV is prepared locally pending explicit redistribution confirmation.
+The supplied file contained six non-daily test rows dated 9 July 2025 and three empty columns. They were excluded from the checked, execution-aligned input. Observed scientific values were not altered. The checked CSV and its PDF data card are deposited in this directory.
 
 ## Provenance boundary
 

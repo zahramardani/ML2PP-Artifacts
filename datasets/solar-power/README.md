@@ -1,6 +1,6 @@
 # Use Case 3 - solar-power dataset
 
-## Checked processed file (publication pending)
+## Checked processed file
 
 `use_case_3_solar_power_hourly.csv`
 
@@ -15,4 +15,4 @@
 
 The target is the arithmetic hourly mean of available Plant 1 inverter-level `DC_POWER` observations. It is not total plant energy and not grid-injected AC power.
 
-The thesis preprocessing fills consistently non-producing night-time gaps with zero, interpolates short daytime gaps, and applies forward/backward propagation to remaining gaps. Because two-sided interpolation and backward filling can use future information, the reported results are retrospective positive-path validation rather than leakage-free online forecasting evidence. The PDF data card is public; the CSV is prepared locally pending explicit redistribution confirmation.
+The thesis preprocessing fills consistently non-producing night-time gaps with zero, interpolates short daytime gaps, and applies forward/backward propagation to remaining gaps. Because two-sided interpolation and backward filling can use future information, the reported results are retrospective positive-path validation rather than leakage-free online forecasting evidence. The checked CSV and its PDF data card are deposited in this directory.
