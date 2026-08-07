@@ -89,3 +89,4 @@ else:
               mode   = 'a',
               header = not os.path.exists(output_csv_path),
               index  = False)
+
