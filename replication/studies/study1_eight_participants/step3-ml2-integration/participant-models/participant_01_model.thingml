@@ -1,0 +1,158 @@
+datatype String<256>
+	@type_checker `String`
+	@c_type `char *`
+	@java_type `String`
+	@js_type `String`
+datatype Boolean<1>
+	@type_checker `Boolean`
+	@c_type `uint8_t`
+	@java_type `boolean`
+	@js_type `boolean`
+datatype Int32<4>
+	@type_checker `Integer`
+	@c_type `int32_t`
+	@java_type `int`
+	@js_type `int`
+thing fragment FlowMsgs {
+	message sensor_data(level : Int32, temp : Int32, wind_speed : Int32)
+	message ack()
+	message query(level : Int32, temp : Int32, wind_speed : Int32)
+	message alert()
+	message safe()
+}
+
+thing SensorClient includes FlowMsgs {
+	required port data_service {
+		sends sensor_data receives ack
+	}
+	property my_level : Int32 = 100
+	property my_temp : Int32 = 20
+	property my_wind_speed : Int32 = 15
+	statechart SensorClientBehavior init SendData {
+		on entry print "Sensor Client Started!\n"
+		state SendData {
+			on entry do
+				print "Sending sensor data...\n"
+				data_service!sensor_data(my_level, my_temp, my_wind_speed)
+			end
+			transition -> ReceiveAck
+			event data_service?ack
+		}
+		state ReceiveAck {
+			on entry print "Sensor data acknowledged by server.\n"
+			transition -> Stop
+		}
+		state Stop {
+			on entry print "Sensor Client Stopped.\n"
+		}
+	}
+}
+thing FlowServer includes FlowMsgs {
+ provided port data_service {
+  sends ack receives sensor_data
+ }
+ required port fa_service {
+  sends query receives alert receives safe
+ }
+ property level : Int32
+ property temp : Int32
+ property wind_speed : Int32
+ statechart FlowServerBehavior init GetData {
+  on entry print "Flow Server Started!\n"
+  state GetData {
+   internal
+   event e : data_service?sensor_data
+   action do
+    level = e.level
+    temp = e.temp
+    wind_speed = e.wind_speed
+    print "Analyzing received data...\n"
+    fa_service!query(level, temp, wind_speed)
+   end
+   transition -> Ack
+   event fa_service?safe
+   transition -> Alert
+   event fa_service?alert
+  }
+  state Ack {
+   on entry do
+    print "✅ Flow rate is safe. Acknowledging sensor...\n"
+    data_service!ack()
+   end
+   transition -> GetData
+  }
+  state Alert {
+   on entry do
+    print "⚠️ Flow rate exceeds threshold! Alerting...\n"
+    data_service!ack()
+   end
+   transition -> GetData
+  }
+ }
+}
+thing FlowAnalytics includes FlowMsgs {
+ provided port fa_service {
+  sends alert sends safe receives query
+ }
+ property level : Int32
+ property temp : Int32
+ property wind_speed : Int32
+ property predction1 : Int32
+ property predction2 : Int32
+ property predction3 : Int32
+ data_analytics da1 @dalib `keras-tensorflow` { data { dataset "usecase1.csv" labels ON features level , temp , wind_speed output_features wind_speed
+ timestamps ON   common_period_threshold 10  } preprocessing {fill_missing MEAN resample DAILY transformations LogTransformation } time_series { sequential TRUE steps 3 lag 20 multivariate ON supervised_learning ON } 
+ model { autoML OFF algorithm LSTM
+ lstm_model (units 90  hidden_layer_sizes (90,90) return_sequences false input_activation relu  hidden_activation relu regularization 'l2'  dropout 0.2  optimizer adam  rate 0.001  batch_size 32 epochs 100 early_stopping 'enable' overfitting_Plots  TRAINING_LOSS  forecasting_plots FORECAST_VS_ACTUAL   )
+ training_results "data/training.txt" } evaluation { prediction_results predction1 , predction2 , predction3 metrics MSE} visualization {plots LINE_PLOT , HEAT_MAP} }
+ statechart FlowAnalyticsBehavior init Preprocess {
+  on entry print "Flow Analytics Started!\n"
+  state Preprocess {
+   on entry do
+    print "Flow Analytics: Data Preprocessing\n"
+    da_preprocess da1
+   end
+   transition -> Train
+  }
+  state Train {
+   on entry do
+    print "Flow Analytics: Training\n"
+    da_train da1
+   end
+   transition -> Ready
+  }
+  state Ready {
+   on entry print "Flow Analytics: Ready for Prediction\n"
+   transition -> Predict
+   event m : fa_service?query
+   action do
+    level = m.level
+    temp = m.temp
+    wind_speed = m.wind_speed
+   end
+  }
+  state Predict {
+   on entry do
+    print "Flow Analytics: Predicting\n"
+    da_predict da1 ( level , temp , wind_speed )
+   end
+   on exit da_save da1
+   transition -> Decide
+  }
+  state Decide {
+   on entry do
+    if (predction1 >= 150 or predction2 >= 150 or
+predction3 >= 150) fa_service!alert()
+    else fa_service!safe()
+   end
+   transition -> Ready
+  }
+ }
+}
+configuration RiverFlowCfg @compiler `python_java`{
+ instance sensorClient : SensorClient
+ instance flowServer : FlowServer
+ instance flowAnalytics : FlowAnalytics
+ connector sensorClient.data_service => flowServer . data_service
+ connector flowServer.fa_service => flowAnalytics . fa_service
+}
