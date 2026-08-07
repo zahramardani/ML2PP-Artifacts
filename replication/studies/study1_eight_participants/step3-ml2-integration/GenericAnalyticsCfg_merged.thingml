@@ -1,0 +1,167 @@
+datatype String<256>
+	@type_checker `String`
+	@c_type `char *`
+	@java_type `String`
+	@js_type `String`
+datatype Boolean<1>
+	@type_checker `Boolean`
+	@c_type `uint8_t`
+	@java_type `boolean`
+	@js_type `boolean`
+datatype Int32<4>
+	@type_checker `Integer`
+	@c_type `int32_t`
+	@java_type `int`
+	@js_type `int`
+datatype Float64<8>
+	@type_checker `Float64`
+	@c_type `double`
+	@java_type `double`
+	@js_type `number`
+thing fragment AnalyticsMsgs {
+	message sensor_data(feature1 : Float64, feature2 : Float64, feature3 : Float64, target_feature : Float64)
+	message ack()
+	message query(feature1 : Float64, feature2 : Float64, feature3 : Float64, target_feature : Float64)
+	message alert()
+	message safe()
+}
+thing SensorClient includes AnalyticsMsgs {
+	required port data_service {
+		sends sensor_data receives ack
+	}
+	property feature1_value : Float64 = 0.0
+	property feature2_value : Float64 = 0.0
+	property feature3_value : Float64 = 0.0
+	property target_value : Float64 = 0.0
+	statechart SensorClientBehavior init Wait {
+		state Wait {
+			on entry do
+				print "Waiting before sending sensor data...\n"
+			end
+			transition -> SendData
+		}
+		state SendData {
+			on entry do
+				print "Sending sensor data to server...\n"
+				data_service!sensor_data(feature1_value, feature2_value, feature3_value, target_value)
+			end
+			transition -> ReceiveAck
+			event data_service?ack
+		}
+		state ReceiveAck {
+			on entry print "Sensor data acknowledged by server.\n"
+			transition -> Wait
+		}
+	}
+}
+thing AnalyticsServer includes AnalyticsMsgs {
+	provided port data_service {
+		sends ack receives sensor_data
+	}
+	required port fa_service {
+		sends query receives alert receives safe
+	}
+	property feature1 : Float64
+	property feature2 : Float64
+	property feature3 : Float64
+	property target_feature : Float64
+	statechart AnalyticsServerBehavior init GetData {
+		on entry print "Analytics Server Started!\n"
+		state GetData {
+			internal
+			event e : data_service?sensor_data
+			action do
+				feature1 = e.feature1
+				feature2 = e.feature2
+				feature3 = e.feature3
+				target_feature = e.target_feature
+				print "Processing received sensor data...\n"
+				fa_service!query(feature1, feature2, feature3, target_feature)
+			end
+			transition -> Ack
+			event fa_service?safe
+			transition -> Alert
+			event fa_service?alert
+		}
+		state Ack {
+			on entry do
+				print "Prediction is within normal range.\n"
+				data_service!ack()
+			end
+			transition -> GetData
+		}
+		state Alert {
+			on entry do
+				print "Prediction exceeded threshold. Alert generated.\n"
+				data_service!ack()
+			end
+			transition -> GetData
+		}
+	}
+}
+thing AnalyticsEngine includes AnalyticsMsgs {
+	provided port fa_service {
+		sends alert sends safe receives query
+	}
+	property feature1 : Float64
+	property feature2 : Float64
+	property feature3 : Float64
+	property target_feature : Float64
+	property pred1 : Float64
+	property pred2 : Float64
+	property pred3 : Float64
+	data_analytics da1 @dalib `xgboost` { data { dataset "data/dataset.csv" labels ON features feature1 , feature2 , feature3 output_features target_feature timestamps ON } preprocessing { preprocess_feature_scaler MinMaxScaler remove_outliers ON advanced_imputation ON } time_series { sequential TRUE steps 3 lag 20 stationary_check ON seasonality_detection ON } model { autoML OFF algorithm XGBoost model1 ( max_depth 6 learning_rate 0.1 n_estimators 100 objective "reg:squarederror" booster "gbtree" min_child_weight 1.0 subsample 0.8 colsample_bytree 0.8 reg_lambda 1.0 scale_pos_weight 1.0 random_state 42 ) training_results "data/training_results.txt" } evaluation { prediction_results pred1 , pred2 , pred3 metrics MSE } visualization { plots LINE_PLOT } }
+	statechart AnalyticsEngineBehavior init Preprocess {
+		on entry print "Analytics Engine Started!\n"
+		state Preprocess {
+			on entry do
+				print "Preprocessing dataset...\n"
+				da_preprocess da1
+			end
+			transition -> Train
+		}
+		state Train {
+			on entry do
+				print "Training model...\n"
+				da_train da1
+			end
+			transition -> Ready
+		}
+		state Ready {
+			on entry print "Ready for prediction.\n"
+			transition -> Predict
+			event m : fa_service?query
+			action do
+				feature1 = m.feature1
+				feature2 = m.feature2
+				feature3 = m.feature3
+				target_feature = m.target_feature
+			end
+		}
+		state Predict {
+			on entry do
+				print "Running prediction...\n"
+				da_predict da1 ( target_feature )
+			end
+			on exit do
+				da_save da1
+				print "Forecast Results - Next 3 steps: {pred1}, {pred2}, {pred3}\n"
+			end
+			transition -> Decide
+		}
+		state Decide {
+			on entry do
+				if (pred1 >= 0.8 or pred2 >= 0.8 or pred3 >= 0.8) fa_service!alert()
+				else fa_service!safe()
+			end
+			transition -> Ready
+		}
+	}
+}
+configuration GenericAnalyticsCfg @compiler `python_java` {
+	instance sensorClient : SensorClient
+	instance analyticsServer : AnalyticsServer
+	instance analyticsEngine : AnalyticsEngine
+	connector sensorClient.data_service => analyticsServer . data_service
+	connector analyticsServer.fa_service => analyticsEngine . fa_service
+}
