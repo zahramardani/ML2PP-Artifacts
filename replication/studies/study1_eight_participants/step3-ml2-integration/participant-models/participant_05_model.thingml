@@ -1,0 +1,159 @@
+datatype String<256>
+	@type_checker `String`
+	@c_type `char *`
+	@java_type `String`
+	@js_type `String`
+datatype Boolean<1>
+	@type_checker `Boolean`
+	@c_type `uint8_t`
+	@java_type `boolean`
+	@js_type `boolean`
+datatype Int32<4>
+	@type_checker `Integer`
+	@c_type `int32_t`
+	@java_type `int`
+	@js_type `int`
+datatype Float32<4>
+	@type_checker `Float`
+	@c_type `float`
+	@java_type `float`
+	@js_type `number`
+
+thing fragment SolarMsgs {
+	message sensor_power(ts : String, dc_power : Float32)   
+	message ack()
+	message query()
+	message alert()
+	message safe()
+}
+
+thing SolarClient includes SolarMsgs {
+	required port data_service {
+		sends sensor_power receives ack
+	}
+	property my_dc_power : Float32 = 0.0
+	statechart SolarClientBehavior init SendData {
+		on entry print "Solar Client Started!\n"
+		state SendData {
+			on entry do
+				print "Sending DC_POWER data...\n"
+				// timestamp can be attached by runtime; send value only for brevity
+				data_service!sensor_power("now", my_dc_power)
+			end
+			transition -> ReceiveAck
+			event data_service?ack
+		}
+		state ReceiveAck {
+			on entry print "Sensor data acknowledged by server.\n"
+			transition -> Stop
+		}
+		state Stop {
+			on entry print "Solar Client Stopped.\n"
+		}
+	}
+}
+
+thing SolarServer includes SolarMsgs {
+	provided port data_service {
+		sends ack receives sensor_power
+	}
+	required port sa_service {
+		sends query receives alert receives safe
+	}
+	property dc_power : Float32
+	statechart SolarServerBehavior init GetData {
+		on entry print "Solar Server Started!\n"
+		state GetData {
+			internal
+			event e : data_service?sensor_power
+			action do
+				dc_power = e.dc_power
+				print "Received DC_POWER, forwarding to analytics...\n"
+				sa_service!query()
+			end
+			transition -> Ack
+			event sa_service?safe
+			transition -> Alert
+			event sa_service?alert
+		}
+		state Ack {
+			on entry do
+				print "✅ Power OK. Acknowledging sensor...\n"
+				data_service!ack()
+			end
+			transition -> GetData
+		}
+		state Alert {
+			on entry do
+				print "⚠️ Power anomaly detected! Alerting...\n"
+				data_service!ack()
+			end
+			transition -> GetData
+		}
+	}
+}
+
+thing SolarAnalytics includes SolarMsgs {
+	provided port sa_service {
+		sends alert sends safe receives query
+	}
+property dc_power : Float32
+property predction1 : Float32
+property predction2 : Float32
+
+ data_analytics da1 @dalib `xgboost` { data { dataset "usecase3_ddmmyy_noheader.csv"  labels OFF  features predction1 , predction2 , dc_power  output_features dc_power 
+ timestamps ON   common_period_threshold 10  } preprocessing { preprocess_feature_scaler MinMaxScaler remove_outliers ON advanced_imputation ON lag_features ON rolling_window ON } time_series { sequential TRUE steps 2 lag 20 stationary_check ON supervised_learning ON } 
+ model { autoML ON algorithm XGBoost XGBoost_model ( n_estimators 100) training_results "data/training.txt" } evaluation { prediction_results predction1 , predction2  metrics MAE} visualization {plots LINE_PLOT} }
+
+
+statechart SolarAnalyticsBehavior init Preprocess {
+	on entry print "Solar Analytics Started!\n"
+	state Preprocess {
+		on entry do
+			print "Data Preprocessing (XGBoost usecase)\n"
+			da_predict da1 ( predction1 , predction2 , dc_power )
+		end
+		transition -> Train
+	}
+	state Train {
+		on entry do
+			print "Training XGBoost model...\n"
+			da_train da1
+		end
+		transition -> Ready
+	}
+	state Ready {
+		on entry print "Analytics ready for prediction\n"
+		transition -> Predict
+		event m : sa_service?query
+		action do
+			print "Received query: running prediction (t+1,t+2)\n"
+		end
+	}
+	state Predict {
+		on entry do
+			print "Predicting next 2 hours...\n"
+			da_predict da1 ( predction1 , predction2 , dc_power )
+		end
+		on exit da_save da1
+		transition -> Decide
+	}
+	state Decide {
+		on entry do
+			if (predction1 >= 150.0 or predction2 >= 150.0)
+				sa_service!alert()
+			else
+				sa_service!safe()
+		end
+		transition -> Ready
+	}
+}
+}
+
+configuration SolarForecastCfg @compiler `python_java` {
+	instance solarClient : SolarClient
+	instance solarServer : SolarServer
+	instance solarAnalytics : SolarAnalytics
+	connector solarClient.data_service => solarServer.data_service
+	connector solarServer.sa_service => solarAnalytics.sa_service
+}
