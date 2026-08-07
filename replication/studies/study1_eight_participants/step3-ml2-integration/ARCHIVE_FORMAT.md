@@ -1,0 +1,1 @@
+The supplied Stage-3 ML2++ archive contains only text/code artifacts. Its contents are deposited directly in this directory structure rather than preserving a participant-specific ZIP filename.
