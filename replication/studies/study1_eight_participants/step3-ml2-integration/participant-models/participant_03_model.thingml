@@ -1,0 +1,143 @@
+datatype String<256>
+	@type_checker `String`
+	@c_type `char *`
+	@java_type `String`
+	@js_type `String`
+datatype Boolean<1>
+	@type_checker `Boolean`
+	@c_type `uint8_t`
+	@java_type `boolean`
+	@js_type `boolean`
+datatype Int32<4>
+	@type_checker `Integer`
+	@c_type `int32_t`
+	@java_type `int`
+	@js_type `int`
+thing fragment FlowMsgs {
+	message sensor_data(level : Int32)
+	message ack()
+	message query(level : Int32)
+	message alert()
+	message safe()
+}
+thing SensorClient includes FlowMsgs {
+	required port data_service {
+		sends sensor_data receives ack
+	}
+	property level : Int32 = 100
+	statechart SensorClientBehavior init SendData {
+		on entry print "Sensor Client Started!\n"
+		state SendData {
+			on entry do
+				print "Sending sensor data...\n"
+				data_service!sensor_data(level)
+			end
+			transition -> ReceiveAck
+			event data_service?ack
+		}
+		state ReceiveAck {
+			on entry print "Sensor data acknowledged by server.\n"
+			transition -> Stop
+		}
+		state Stop {
+			on entry print "Sensor Client Stopped.\n"
+		}
+	}
+}
+thing FlowServer includes FlowMsgs {
+	provided port data_service {
+		sends ack receives sensor_data
+	}
+	required port fa_service {
+		sends query receives alert receives safe
+	}
+	property level : Int32
+	statechart EnergyServerBehavior init GetData {
+		on entry print "Energy Server Started!\n"
+		state GetData {
+			internal
+			event e : data_service?sensor_data
+			action do
+				level = e.level
+				print "Analyzing received data...\n"
+				fa_service!query(level)
+			end
+			transition -> Ack
+			event fa_service?safe
+			transition -> Alert
+			event fa_service?alert
+		}
+		state Ack {
+			on entry do
+				print "✅ Energy consumption is safe. Acknowledging sensor...\n"
+				data_service!ack()
+			end
+			transition -> GetData
+		}
+		state Alert {
+			on entry do
+				print "⚠️ Energy consumption exceeds threshold! Alerting...\n"
+				data_service!ack()
+			end
+			transition -> GetData
+		}
+	}
+}
+thing FlowAnalytics includes FlowMsgs {
+	provided port fa_service {
+		sends alert sends safe receives query
+	}
+	property level : Int32
+	property predction1 : Int32
+	property predction2 : Int32
+	property predction3 : Int32
+	data_analytics da1 @dalib `statsmodels` { data { dataset "HomeC_selected.csv" labels ON features level output_features level timestamps ON } preprocessing { preprocess_feature_scaler MinMaxScaler remove_outliers ON advanced_imputation ON lag_features ON rolling_window ON resample HOURLY } time_series { sequential TRUE steps 3 lag 20 stationary_check ON seasonality_detection ON } model { autoML OFF algorithm SARIMA arima1 ( p 1 differencing 1 q 1 seasonalP 1 seasonalD 1 seasonalQ 1 seasonality 24 trend "c" ) training_results "data/training.txt" } evaluation { prediction_results predction1 , predction2 , predction3 metrics MSE } visualization { plots LINE_PLOT , HISTOGRAM } }
+	statechart EnergyAnalyticsBehavior init Preprocess {
+		on entry print "Energy Analytics Started!\n"
+		state Preprocess {
+			on entry do
+				print "Energy Analytics: Data Preprocessing (ARIMA usecase)\n"
+				da_preprocess da1
+			end
+			transition -> Train
+		}
+		state Train {
+			on entry do
+				print "Energy Analytics: Training ARIMA model...\n"
+				da_train da1
+			end
+			transition -> Ready
+		}
+		state Ready {
+			on entry print "Energy Analytics: Ready for Prediction\n"
+			transition -> Predict
+			event m : fa_service?query
+			action do
+				level = m.level
+				print "Energy Analytics: Received query for level=" + level + "; running prediction (t+1,t+2,t+3)\n"
+			end
+		}
+		state Predict {
+			on entry do
+				print "Energy Analytics: Predicting next 3 minutes...\n"
+				da_predict da1 ( predction1 , predction2 , predction3 )
+			end
+			on exit da_save da1
+			transition -> Decide
+		}
+		state Decide {
+			on entry do
+				if (predction1 >= 150 or predction2 >= 150 or predction3 >= 150) fa_service!alert()
+				else fa_service!safe()
+			end
+			transition -> Ready
+		}
+	}
+}
+configuration EnergyCfg @compiler `python_java` {
+	instance sensorClient : SensorClient
+	instance energyServer : FlowServer
+	instance energyAnalytics : FlowAnalytics
+	connector sensorClient.data_service => energyServer . data_service
+	connector energyServer.fa_service => energyAnalytics . fa_service
+}
