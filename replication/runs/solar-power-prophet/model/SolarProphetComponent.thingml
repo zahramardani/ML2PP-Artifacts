@@ -1,15 +1,15 @@
-// PROVENANCE: transcribed from the revised dissertation listing.
-// STATUS: end-to-end configuration reported as executed in the dissertation.
-// This is not asserted to be the byte-exact executed source.
+// PROVENANCE: transcribed from final Chapter 5 technical-validation Listing 1.6 (2026-08-14).
+// STATUS: declaration/model-specification evidence only; this file is not asserted
+// to be the byte-exact executed source.
 
 thing SolarProphetComponent {
-  property DC_POWER    : Double
+  property DC_POWER : Double
   property prediction1 : Double
   property prediction2 : Double
 
   data_analytics prophetAnalytics @dalib `prophet` {
     data {
-      dataset "data/solar_generation_hourly.csv"
+      dataset "data/use_case_3_solar_power_hourly.csv"
       features DC_POWER
       input_features DC_POWER
       output_features DC_POWER
@@ -17,7 +17,7 @@ thing SolarProphetComponent {
     }
 
     preprocessing {
-      fill_missing INTERPOLATION
+      fill_missing OFF
       remove_outliers OFF
     }
 
