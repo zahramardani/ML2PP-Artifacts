@@ -1,28 +1,27 @@
-// PROVENANCE: transcribed from the revised dissertation listing.
-// STATUS: specification evidence only; replace with the byte-exact executed
-// model before claiming generator or execution provenance.
+// PROVENANCE: transcribed from final Chapter 5 technical-validation Listing 1.1 (2026-08-14).
+// STATUS: declaration/model-specification evidence only; this file is not asserted
+// to be the byte-exact executed source.
 
 thing RiverForecastLSTMComponent {
-  property disch1 : Double
-  property disch2 : Double
-  property disch3 : Double
-
+  property fratel_discharge : Double
+  property castelo_bode_discharge : Double
+  property almourol_discharge : Double
   property prediction1 : Double
   property prediction2 : Double
   property prediction3 : Double
 
   data_analytics lstmAnalytics @dalib `keras-tensorflow` {
     data {
-      dataset "flow_dataset.csv"
-      features disch1, disch2, disch3
-      input_features disch1, disch2, disch3
-      output_features disch2
+      dataset "data/use_case_1_river_flow_observed.csv"
+      features fratel_discharge, castelo_bode_discharge, almourol_discharge
+      input_features fratel_discharge, castelo_bode_discharge, almourol_discharge
+      output_features almourol_discharge
       timestamps ON
       common_period_threshold 10
     }
 
     preprocessing {
-      fill_missing INTERPOLATION
+      fill_missing FF
       resample DAILY
       remove_outliers OFF
     }
@@ -41,7 +40,7 @@ thing RiverForecastLSTMComponent {
 
     model {
       autoML OFF
-      algorithm LSTM executed_lstm(
+      algorithm LSTM lstm_almourol(
         units 64,
         hidden_layer_sizes (64),
         return_sequences false,
@@ -58,7 +57,7 @@ thing RiverForecastLSTMComponent {
         overfitting_Plots TRAINING_LOSS,
         forecasting_plots FORECAST_VS_ACTUAL
       )
-      training_results "data/executed_lstm_river_training.txt"
+      training_results "data/lstm_almourol_training.txt"
       hyperparameter_tuning OFF
     }
 
