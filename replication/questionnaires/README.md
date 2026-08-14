@@ -11,11 +11,12 @@ the prepared Tejo river-flow model, where Fratel and Castelo de Bode are input
 stations and Almourol is the forecasting target.
 
 `stage4_questionnaire_public_aggregate.csv` contains the privacy-reviewed
-aggregate Stage 4 results used in the dissertation tables, including sample
-sizes, descriptive statistics, confidence-interval half-widths, construct
-internal-consistency coefficients, and aggregate categorical counts. It
-contains no participant-level rows, direct identifiers, identifying dates, or
-verbatim free-text responses.
+aggregate Stage 4 results used in the dissertation tables, including 130
+questionnaire invitations, 40 valid analysed responses, the 30.8% invitation-
+to-analysed-response yield, descriptive statistics, confidence-interval
+half-widths, construct internal-consistency coefficients, and aggregate
+categorical counts. It contains no participant-level rows, direct identifiers,
+identifying dates, or verbatim free-text responses.
 
 The extraction can be repeated with
 `scripts/export_questionnaire_appendix.py` after the dissertation source is
