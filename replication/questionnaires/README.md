@@ -7,8 +7,9 @@ participant responses.
 
 `stage4_quick_start_tutorial.pdf` is the real-user Quick-Start document used
 for the Stage 4 guided study. It contains Tasks 1--13 for the ML2++ editor and
-the prepared Tejo river-flow model, where Fratel and Castelo de Bode are input
-stations and Almourol is the forecasting target.
+the prepared Tejo river-flow model. Almourol is the forecasting target; Fratel
+and Castelo de Bode provide the other station series, while lagged Almourol
+values are also supplied in the model's historical input window.
 
 `stage4_questionnaire_public_aggregate.csv` contains the privacy-reviewed
 aggregate Stage 4 results used in the dissertation tables, including 130
