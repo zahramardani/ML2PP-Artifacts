@@ -5,6 +5,11 @@ instrument appendix extracted verbatim from the revised dissertation source,
 including instructions, response scales and scale directions. It contains no
 participant responses.
 
+`stage4_quick_start_tutorial.pdf` is the real-user Quick-Start document used
+for the Stage 4 guided study. It contains Tasks 1--13 for the ML2++ editor and
+the prepared Tejo river-flow model, where Fratel and Castelo de Bode are input
+stations and Almourol is the forecasting target.
+
 `stage4_questionnaire_public_aggregate.csv` contains the privacy-reviewed
 aggregate Stage 4 results used in the dissertation tables, including sample
 sizes, descriptive statistics, confidence-interval half-widths, construct
