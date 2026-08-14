@@ -1,5 +1,8 @@
 section,measure_code,measure_label,category,n,mean,sd,median,ci95_half_width,cronbach_alpha,frequency,denominator,notes
 study,analysed_responses,Analysed Stage 4 responses,,,,,,,,40,40,All retained responses confirmed the form statement requiring age 18+ and voluntary consent.
+study,invitations_sent,Stage 4 questionnaire invitations sent,,,,,,,,130,130,Invitations were distributed through academic and professional networks spanning academia and industry.
+study,invitation_to_analysed_yield,Invitation-to-analysed-response yield,,40,0.3076923077,,,,,40,130,"40 valid analysed responses from 130 invitations (30.8%). This is not labelled a conventional response rate because delivery, opening, eligibility, starting, and drop-out states were not preserved."
+study,recruitment_scope,Recruitment scope,Academic and professional networks; academia and industry,,,,,,,,,"The form did not preserve a separate analysable academia-versus-industry variable, so no sector count is reported."
 study,public_data_boundary,Public data boundary,,,,,,,,,,"Aggregate statistics only. Submission timestamp, full name, form date, participant-level rows, and verbatim free-text responses are excluded from this public artifact."
 participant_profile,gender,Gender,Man,,,,,,,29,40,
 participant_profile,gender,Gender,Woman,,,,,,,10,40,
