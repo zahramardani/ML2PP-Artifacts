@@ -1,7 +1,7 @@
 run_id,use_case,algorithm,reported_role,package_model_path,model_provenance,exact_generated_sources,point_predictions,execution_log,verified_manifest
-river-flow-lstm,River flow,LSTM,executed,runs/river-flow-lstm/model/RiverForecastLSTMComponent.thingml,thesis-transcribed,missing,missing,missing,missing
-river-flow-gru,River flow,GRU,executed,runs/river-flow-gru/model/RiverForecastGRUComponent.thingml,thesis-transcribed,missing,missing,missing,missing
-smart-home-arima,Smart-home energy,"ARIMA(1,1,1)",executed,runs/smart-home-arima/model/SmartHomeARIMAComponent.thingml,thesis-transcribed,missing,missing,missing,missing
-smart-home-holt-winters,Smart-home energy,"Holt-Winters, period 60",executed,runs/smart-home-holt-winters/model/SmartHomeHoltWintersComponent.thingml,thesis-transcribed,missing,missing,missing,missing
-solar-power-xgboost,Solar power,XGBoost,executed,runs/solar-power-xgboost/model/SolarXGBoostComponent.thingml,thesis-transcribed,missing,missing,missing,missing
-solar-power-prophet,Solar power,Prophet,executed,runs/solar-power-prophet/model/SolarProphetComponent.thingml,thesis-transcribed,missing,aggregate thesis-reported only,missing,missing
+river-flow-lstm,River flow,LSTM,reported-causal-audit,runs/river-flow-lstm/model/RiverForecastLSTMComponent.thingml,final-chapter-5-thesis-transcribed,missing,missing,missing,missing
+river-flow-gru,River flow,GRU,reported-causal-audit,runs/river-flow-gru/model/RiverForecastGRUComponent.thingml,final-chapter-5-thesis-transcribed,missing,missing,missing,missing
+smart-home-arima,Smart Energy,"ARIMA(1,1,1)",reported-causal-audit,runs/smart-home-arima/model/SmartHomeARIMAComponent.thingml,final-chapter-5-thesis-transcribed,missing,missing,missing,missing
+smart-home-holt-winters,Smart Energy,"Holt-Winters, period 60",reported-causal-audit,runs/smart-home-holt-winters/model/SmartHomeHoltWintersComponent.thingml,final-chapter-5-thesis-transcribed,missing,missing,missing,missing
+solar-power-xgboost,Solar power,XGBoost,reported-causal-audit,runs/solar-power-xgboost/model/SolarXGBoostComponent.thingml,final-chapter-5-thesis-transcribed,missing,missing,missing,missing
+solar-power-prophet,Solar power,Prophet,reported-causal-audit,runs/solar-power-prophet/model/SolarProphetComponent.thingml,final-chapter-5-thesis-transcribed,missing,missing,missing,missing
