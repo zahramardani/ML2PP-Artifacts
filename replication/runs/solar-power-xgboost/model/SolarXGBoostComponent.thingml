@@ -1,15 +1,15 @@
-// PROVENANCE: transcribed from the revised dissertation listing.
-// STATUS: specification evidence only; replace with the byte-exact executed
-// model before claiming generator or execution provenance.
+// PROVENANCE: transcribed from final Chapter 5 technical-validation Listing 1.5 (2026-08-14).
+// STATUS: declaration/model-specification evidence only; this file is not asserted
+// to be the byte-exact executed source.
 
 thing SolarXGBoostComponent {
-  property DC_POWER    : Double
+  property DC_POWER : Double
   property prediction1 : Double
   property prediction2 : Double
 
   data_analytics xgbAnalytics @dalib `xgboost` {
     data {
-      dataset "data/solar_generation_hourly.csv"
+      dataset "data/use_case_3_solar_power_hourly.csv"
       features DC_POWER
       input_features DC_POWER
       output_features DC_POWER
@@ -17,10 +17,8 @@ thing SolarXGBoostComponent {
     }
 
     preprocessing {
-      fill_missing INTERPOLATION
+      fill_missing FF
       remove_outliers OFF
-      lag_features ON
-      rolling_window ON
     }
 
     time_series {
@@ -37,13 +35,20 @@ thing SolarXGBoostComponent {
     model {
       autoML OFF
       algorithm XGBoost xgb_solar(
+        max_depth 2,
+        learning_rate 0.05,
+        n_estimators 200,
         objective "reg:squarederror",
         booster "gbtree",
+        min_child_weight 3.0,
+        subsample 0.8,
+        colsample_bytree 1.0,
+        reg_lambda 5.0,
         random_state 42,
         forecasting_plots FORECAST_VS_ACTUAL
       )
       training_results "data/xgboost_solar_training.txt"
-      hyperparameter_tuning RANDOM_SEARCH
+      hyperparameter_tuning OFF
     }
 
     evaluation {
