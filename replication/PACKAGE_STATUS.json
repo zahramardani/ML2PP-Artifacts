@@ -1,6 +1,16 @@
 {
   "package_status": "incomplete_uploadable_scaffold",
   "generator_revision_referenced": "4253f75e7f3b3f94620d79e672e4db52b477d32c",
+  "chapter_5_alignment_date": "2026-08-14",
+  "model_specification_coverage": {
+    "status": "complete_against_final_chapter_5_listings",
+    "use_cases": 3,
+    "configurations": 6,
+    "river_flow": ["LSTM", "GRU"],
+    "smart_energy": ["ARIMA(1,1,1)", "Holt-Winters"],
+    "solar_power": ["XGBoost", "Prophet"],
+    "provenance_boundary": "Specifications are thesis transcriptions; they are not asserted to be byte-exact executed model files."
+  },
   "included": {
     "thesis_transcribed_model_specifications": 6,
     "reference_specifications": 0,
