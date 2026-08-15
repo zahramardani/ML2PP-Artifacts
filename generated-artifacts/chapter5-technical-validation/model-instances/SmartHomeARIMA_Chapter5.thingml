@@ -1,0 +1,29 @@
+datatype Double<8>
+	@type_checker `Real`
+	@c_type `double`
+	@java_type `double`
+	@js_type `double`
+	@go_type `float64`
+thing SmartHomeARIMAComponent {
+	property use_kW : Double
+	property prediction1 : Double
+	property prediction2 : Double
+	property prediction3 : Double
+	data_analytics arimaAnalytics @dalib `statsmodels` { data { dataset "/home/zahra/test/use_case_2_smart_home_energy.csv" features use_kW input_features use_kW output_features use_kW timestamps ON } preprocessing { fill_missing INTERPOLATION remove_outliers OFF } time_series { sequential TRUE steps 3 multivariate OFF stationary_check ON seasonality_detection ON supervised_learning OFF create_lagged_features OFF } model { autoML OFF algorithm ARIMA arima_energy ( p 1 differencing 1 q 1 trend "n" ) training_results "data/arima_energy_training.txt" } evaluation { prediction_results prediction1 , prediction2 , prediction3 } }
+	statechart SmartHomeARIMABehavior init Preprocess {
+		state Preprocess {
+			on entry da_preprocess arimaAnalytics
+			transition -> Train
+		}
+		state Train {
+			on entry da_train arimaAnalytics
+			transition -> Done
+		}
+		final state Done {
+			on entry print "Smart-home ARIMA completed.\n"
+		}
+	}
+}
+configuration SmartHomeARIMACfg @compiler `python_java` {
+	instance analytics : SmartHomeARIMAComponent
+}

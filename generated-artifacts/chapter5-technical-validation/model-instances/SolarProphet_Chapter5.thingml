@@ -1,0 +1,28 @@
+datatype Double<8>
+	@type_checker `Real`
+	@c_type `double`
+	@java_type `double`
+	@js_type `double`
+	@go_type `float64`
+thing SolarProphetComponent {
+	property DC_POWER : Double
+	property prediction1 : Double
+	property prediction2 : Double
+	data_analytics prophetAnalytics @dalib `prophet` { data { dataset "/home/zahra/test/use_case_3_solar_power_hourly.csv" features DC_POWER input_features DC_POWER output_features DC_POWER timestamps ON } preprocessing { fill_missing INTERPOLATION remove_outliers OFF } time_series { sequential TRUE steps 2 multivariate OFF stationary_check ON seasonality_detection ON supervised_learning OFF create_lagged_features OFF } model { autoML OFF algorithm Prophet prophet_solar ( growth "linear" seasonality_mode "additive" seasonality_prior_scale 10.0 holidays_prior_scale 10.0 changepoint_prior_scale 0.05 interval_width 0.8 ) training_results "data/prophet_solar_training.txt" } evaluation { prediction_results prediction1 , prediction2 } visualization { plots LINE_PLOT , LAG_PLOT , AUTOCORRELATION_PLOT } }
+	statechart SolarProphetBehavior init Preprocess {
+		state Preprocess {
+			on entry da_preprocess prophetAnalytics
+			transition -> Train
+		}
+		state Train {
+			on entry da_train prophetAnalytics
+			transition -> Done
+		}
+		final state Done {
+			on entry print "Solar Prophet completed.\n"
+		}
+	}
+}
+configuration SolarProphetCfg @compiler `python_java` {
+	instance analytics : SolarProphetComponent
+}

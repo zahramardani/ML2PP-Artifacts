@@ -1,0 +1,28 @@
+datatype Double<8>
+	@type_checker `Real`
+	@c_type `double`
+	@java_type `double`
+	@js_type `double`
+	@go_type `float64`
+thing SolarXGBoostComponent {
+	property DC_POWER : Double
+	property prediction1 : Double
+	property prediction2 : Double
+	data_analytics xgbAnalytics @dalib `xgboost` { data { dataset "/home/zahra/test/use_case_3_solar_power_hourly.csv" features DC_POWER input_features DC_POWER output_features DC_POWER timestamps ON } preprocessing { fill_missing INTERPOLATION remove_outliers OFF lag_features ON rolling_window ON } time_series { sequential TRUE steps 2 lag 20 multivariate OFF stationary_check ON seasonality_detection ON supervised_learning ON create_lagged_features ON } model { autoML OFF algorithm XGBoost xgb_solar ( objective "reg:squarederror" booster "gbtree" random_state 42 ) training_results "data/xgboost_solar_training.txt" hyperparameter_tuning RANDOM_SEARCH } evaluation { prediction_results prediction1 , prediction2 } visualization { plots LINE_PLOT , LAG_PLOT , AUTOCORRELATION_PLOT } }
+	statechart SolarXGBoostBehavior init Preprocess {
+		state Preprocess {
+			on entry da_preprocess xgbAnalytics
+			transition -> Train
+		}
+		state Train {
+			on entry da_train xgbAnalytics
+			transition -> Done
+		}
+		final state Done {
+			on entry print "Solar XGBoost completed.\n"
+		}
+	}
+}
+configuration SolarXGBoostCfg @compiler `python_java` {
+	instance analytics : SolarXGBoostComponent
+}

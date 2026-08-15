@@ -1,0 +1,31 @@
+datatype Double<8>
+	@type_checker `Real`
+	@c_type `double`
+	@java_type `double`
+	@js_type `double`
+	@go_type `float64`
+thing RiverForecastLSTMComponent {
+	property fratel_discharge : Double
+	property castelo_bode_discharge : Double
+	property almourol_discharge : Double
+	property prediction1 : Double
+	property prediction2 : Double
+	property prediction3 : Double
+	data_analytics lstmAnalytics @dalib `keras-tensorflow` { data { dataset "/home/zahra/test/flow_dataset.csv" features fratel_discharge , castelo_bode_discharge , almourol_discharge input_features fratel_discharge , castelo_bode_discharge , almourol_discharge output_features almourol_discharge timestamps ON common_period_threshold 10 } preprocessing { fill_missing INTERPOLATION remove_outliers OFF resample DAILY } time_series { sequential TRUE steps 3 lag 20 multivariate ON stationary_check ON seasonality_detection ON supervised_learning ON create_lagged_features OFF sliding_window ON } model { autoML OFF algorithm LSTM executed_lstm ( units 64 hidden_layer_sizes ( 64 ) return_sequences false input_activation tanh hidden_activation tanh output_activation linear dropout 0.2 optimizer adam rate 0.001 batch_size 32 epochs 100 metrics 'MAE' early_stopping 'enable' ) training_results "data/executed_lstm_river_training.txt" } evaluation { prediction_results prediction1 , prediction2 , prediction3 metrics MSE } visualization { plots LINE_PLOT , HEAT_MAP } }
+	statechart RiverForecastLSTMBehavior init Preprocess {
+		state Preprocess {
+			on entry da_preprocess lstmAnalytics
+			transition -> Train
+		}
+		state Train {
+			on entry da_train lstmAnalytics
+			transition -> Done
+		}
+		final state Done {
+			on entry print "River LSTM completed.\n"
+		}
+	}
+}
+configuration RiverLSTMCfg @compiler `python_java` {
+	instance analytics : RiverForecastLSTMComponent
+}
