@@ -1,0 +1,10 @@
+# SHA-256 checksums for Chapter 5 retained run archives
+# Generated from the local evidence package on 2026-08-15.
+
+5ee808bc9307eed0a8b8aecd9e427d7aeace37317acbaa13e4193dfdf8b0a33d  2807058  full-run-archives/RiverForecastLSTM_Chapter5_FULL_RUN.zip
+5fc0a9024cc1be601798b3c02d5890374e88defceb82bee0982357066af0afbc  2641937  full-run-archives/RiverForecastGRU_Chapter5_FULL_RUN.zip
+f83e62b3f742cff7426d2a1ddb67f888da28e90a2c9e78b21ad4ac2b85b695af  4160670  full-run-archives/SmartHomeARIMA_Chapter5_FULL_RUN.zip
+3d190bd70113b34e358f4c63ff17c3faabd4b7d7c6fd4f0f81a83654756c25af  3150483  full-run-archives/SmartHomeHoltWinters_Chapter5_FULL_RUN.zip
+9481a22a9100e173a89728c7b7b133aa19373ed26f7a422d74cfaad100104d9c  1460797  full-run-archives/SolarXGBoost_Chapter5_FULL_RUN.zip
+49099cd30c511f3773df3e7b0bf431d98b10d5940e8e7a39e439dbad85a9ca8d  1331776  full-run-archives/SolarProphet_Chapter5_FULL_RUN.zip
+4e50dc1b878fec13888e7c7807500ac389cd1c59a372c9906730f46856fb04c7  541540  Chapter5_Run_Records_Text_6_Models_2026-08-15.zip
