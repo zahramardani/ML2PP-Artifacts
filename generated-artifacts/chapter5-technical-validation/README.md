@@ -1,6 +1,6 @@
 # Chapter 5 Technical-Validation Evidence
 
-This directory contains the retained execution evidence used in Chapter 5 of the dissertation.
+This directory contains the six executed ML2++ model instances and the retained browsable run evidence used for Chapter 5 of the dissertation.
 
 ## Evaluated configurations
 
@@ -14,17 +14,9 @@ SARIMA is intentionally not part of the Chapter 5 technical-validation set. It b
 
 ## Repository structure
 
-### `model-instances/`
-Six standalone `.thingml` model instances copied from the corresponding retained executed runs.
-
-### `full-run-archives/`
-One complete ZIP archive for each of the six retained Chapter 5 run directories. These archives preserve the run directory as supplied, including the merged ThingML model, generated Java/Python source, Maven output, model/checkpoint/pickle files, generated PNG plots, horizon-wise point predictions and metrics, preflight and leakage-audit reports, evaluation metadata, plot manifests, and run metadata.
-
-### `Chapter5_Run_Records_Text_6_Models_2026-08-15.zip`
-A smaller text-oriented bundle for direct inspection of the six model instances and text-based generated evidence without the larger binary model/plot files.
-
-### `SHA256SUMS.txt`
-SHA-256 checksums and byte sizes for the six full-run archives and the text-oriented bundle.
+- `model-instances/` — six standalone `.thingml` instances copied from the retained executed runs.
+- `run-records/` — per-model generated run evidence: run metadata, preflight reports, leakage-audit reports, evaluation metadata, plot manifests, horizon-wise metric summaries, and XGBoost tuning-selection records where applicable.
+- Each run-record folder also contains a SHA-256 file manifest for the complete retained local run directory. The manifest covers generated source, point-level prediction CSVs, PNG plots, model/checkpoint/pickle files, Maven outputs, and the other retained files even when a large binary file is not directly browsable in this repository copy.
 
 ## Retained run identifiers
 
@@ -39,4 +31,4 @@ SHA-256 checksums and byte sizes for the six full-run archives and the text-orie
 
 ## Scope
 
-These retained artifacts support the scoped technical-validation claims in Chapter 5. They do not establish exhaustive coverage of the ML2++ grammar, every supported or anticipated algorithm, every hyperparameter combination, or production deployment readiness.
+These artifacts support the scoped technical-validation claims in Chapter 5. They do not establish exhaustive coverage of the ML2++ grammar, every supported or anticipated algorithm, every hyperparameter combination, or production deployment readiness.
