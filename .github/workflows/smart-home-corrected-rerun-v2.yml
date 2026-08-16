@@ -1,0 +1,135 @@
+name: Smart-home corrected rerun v2
+
+on:
+  push:
+    branches: [smart-home-corrected-rerun-20260816]
+  workflow_dispatch:
+
+jobs:
+  rerun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install numpy==2.3.5 pandas==2.2.3 statsmodels==0.14.6 matplotlib==3.10.8 reportlab
+      - name: Rebuild corrected use_kW dataset
+        run: python datasets/smart-home-energy/preprocess_smart_home.py
+      - name: Validate dataset and run ARIMA plus Holt-Winters separately
+        shell: bash
+        run: |
+          cat > /tmp/run_corrected_smart_home.py <<'PY'
+          import hashlib, json, math, pickle
+          from pathlib import Path
+          import numpy as np
+          import pandas as pd
+          import matplotlib
+          matplotlib.use('Agg')
+          import matplotlib.pyplot as plt
+          from statsmodels.graphics.tsaplots import plot_acf
+          from statsmodels.tsa.arima.model import ARIMA
+          from statsmodels.tsa.holtwinters import ExponentialSmoothing
+          import statsmodels
+
+          DATA = Path('datasets/smart-home-energy/use_case_2_smart_home_energy.csv')
+          EXPECTED = '8211344ec98cff4287496c3daeadd7217c586d18d6b2ca68fe5bb856efd7e7dc'
+          H = 3
+          OUT = Path('smart_home_corrected_rerun')
+          OUT.mkdir(exist_ok=True)
+
+          sha = hashlib.sha256(DATA.read_bytes()).hexdigest()
+          if sha != EXPECTED:
+              raise RuntimeError(f'dataset SHA mismatch: {sha} != {EXPECTED}')
+          df = pd.read_csv(DATA)
+          df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
+          y = pd.to_numeric(df['use_kW'], errors='raise')
+          if len(y) != 4200 or y.isna().any() or df['timestamp'].duplicated().any():
+              raise RuntimeError('corrected dataset validation failed')
+          split = int(0.8 * len(y))
+          train, test = y.iloc[:split].copy(), y.iloc[split:].copy()
+          test_ts = df['timestamp'].iloc[split:].reset_index(drop=True)
+          origins = len(test) - H + 1
+          assert (len(train), len(test), origins) == (3360, 840, 838)
+
+          def score(a, p):
+              a, p = np.asarray(a,float).ravel(), np.asarray(p,float).ravel()
+              e = p-a
+              mse = float(np.mean(e*e)); mae = float(np.mean(np.abs(e)))
+              den = float(np.sum((a-a.mean())**2))
+              return {'N':len(a),'MAE':mae,'RMSE':math.sqrt(mse),'MSE':mse,
+                      'R2':float(1-np.sum(e*e)/den) if den else float('nan')}
+
+          def save_outputs(folder, name, truth, pred, config, fit=None):
+              folder.mkdir(parents=True, exist_ok=True)
+              rows=[]
+              for h in range(H): rows.append({'scope':f't+{h+1}', **score(truth[:,h],pred[:,h])})
+              rows.append({'scope':'overall_pooled', **score(truth,pred)})
+              pd.DataFrame(rows).to_csv(folder/'metrics.csv',index=False)
+              (folder/'metrics.json').write_text(json.dumps(rows,indent=2),encoding='utf-8')
+              pr=[]
+              for i in range(origins):
+                  r={'origin':i,'origin_timestamp':str(test_ts.iloc[i])}
+                  for h in range(H):
+                      r[f'target_timestamp_t+{h+1}']=str(test_ts.iloc[i+h])
+                      r[f'actual_t+{h+1}']=float(truth[i,h]); r[f'prediction_t+{h+1}']=float(pred[i,h])
+                  pr.append(r)
+              pd.DataFrame(pr).to_csv(folder/'predictions.csv',index=False)
+              if fit is not None:
+                  with open(folder/'fitted_model.pickle','wb') as f: pickle.dump(fit,f)
+                  try: (folder/'model_summary.txt').write_text(fit.summary().as_text(),encoding='utf-8')
+                  except Exception: pass
+              plots=folder/'plots'; plots.mkdir(exist_ok=True)
+              fig,ax=plt.subplots(figsize=(11,4.5)); ax.plot(df['timestamp'],y); ax.set_title(f'{name}: corrected use_kW'); ax.set_ylabel('use_kW (kW)'); fig.tight_layout(); fig.savefig(plots/'corrected_use_kW_line_plot.png',dpi=180); plt.close(fig)
+              fig,ax=plt.subplots(figsize=(9,4.5)); plot_acf(y,lags=120,zero=False,ax=ax); ax.set_title(f'{name}: autocorrelation'); fig.tight_layout(); fig.savefig(plots/'autocorrelation_plot.png',dpi=180); plt.close(fig)
+              for h in range(H):
+                  fig,ax=plt.subplots(figsize=(11,4.5)); x=test_ts.iloc[h:h+origins]; ax.plot(x,truth[:,h],label='Actual'); ax.plot(x,pred[:,h],label='Forecast'); ax.set_title(f'{name}: Forecast vs Actual (t+{h+1})'); ax.set_ylabel('use_kW (kW)'); ax.legend(); fig.tight_layout(); fig.savefig(plots/f'forecast_vs_actual_tplus{h+1}.png',dpi=180); plt.close(fig)
+              summary={'model':name,'configuration':config,'dataset_sha256':sha,'dataset_rows':len(y),
+                       'dataset_min_kW':float(y.min()),'dataset_max_kW':float(y.max()),'dataset_mean_kW':float(y.mean()),
+                       'train_observations':len(train),'test_observations':len(test),'complete_forecast_origins':origins,
+                       'horizon':H,'metrics':rows,'statsmodels':statsmodels.__version__,'numpy':np.__version__,'pandas':pd.__version__}
+              (folder/'run_summary.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
+              return summary
+
+          # ARIMA: exact fixed model and rolling append semantics used by current generator.
+          afit=ARIMA(train,order=(1,1,1),seasonal_order=(0,0,0,0),trend='n').fit()
+          state=afit; ap=[]; at=[]
+          for i in range(origins):
+              ap.append(np.asarray(state.forecast(H),float)); at.append(test.iloc[i:i+H].to_numpy(float))
+              if i < len(test)-1: state=state.append(test.iloc[i:i+1],refit=False)
+          ap,at=np.vstack(ap),np.vstack(at)
+          arima=save_outputs(OUT/'SmartHomeARIMA_Corrected_use_kW','ARIMA(1,1,1)',at,ap,
+              {'order':[1,1,1],'seasonal_order':[0,0,0,0],'trend':'n','autoML':False,'fill_missing':'INTERPOLATION (no effect: no missing values)'},afit)
+
+          # Holt-Winters: initial optimized fit, then fixed smoothing parameters at each rolling origin.
+          hfit=ExponentialSmoothing(train,trend='add',damped_trend=True,seasonal='add',seasonal_periods=60,initialization_method='heuristic',use_boxcox=False).fit(optimized=True,remove_bias=False)
+          params=dict(hfit.params); hist=train.copy(); hp=[]; ht=[]
+          for i in range(origins):
+              if i==0: state=hfit
+              else:
+                  base=hfit.model
+                  m=ExponentialSmoothing(hist,trend=base.trend,damped_trend=base.damped_trend,seasonal=base.seasonal,seasonal_periods=base.seasonal_periods,initialization_method='estimated')
+                  state=m.fit(smoothing_level=params.get('smoothing_level'),smoothing_trend=params.get('smoothing_trend'),smoothing_seasonal=params.get('smoothing_seasonal'),damping_trend=params.get('damping_trend'),optimized=False)
+              hp.append(np.asarray(state.forecast(H),float)); ht.append(test.iloc[i:i+H].to_numpy(float))
+              hist=pd.concat([hist,test.iloc[i:i+1]])
+          hp,ht=np.vstack(hp),np.vstack(ht)
+          hw=save_outputs(OUT/'SmartHomeHoltWinters_Corrected_use_kW','Holt-Winters',ht,hp,
+              {'trend':'add','damped':True,'seasonal':'add','seasonal_periods':60,'initialization_method':'heuristic','use_boxcox':False,'remove_bias':False,'optimized':True,'autoML':False,'fill_missing':'OFF'},hfit)
+          comp={'dataset_sha256':sha,'ARIMA':arima['metrics'],'Holt-Winters':hw['metrics']}
+          (OUT/'comparison.json').write_text(json.dumps(comp,indent=2),encoding='utf-8')
+          print('DATASET_SHA',sha)
+          print('DATA_STATS',len(y),float(y.min()),float(y.max()),float(y.mean()))
+          print('SPLIT',len(train),len(test),'ORIGINS',origins)
+          print('ARIMA',json.dumps(arima['metrics']))
+          print('HOLT_WINTERS',json.dumps(hw['metrics']))
+          PY
+          python /tmp/run_corrected_smart_home.py
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-home-corrected-arima-holtwinters-v2
+          path: smart_home_corrected_rerun/
+          if-no-files-found: error
+          retention-days: 30
