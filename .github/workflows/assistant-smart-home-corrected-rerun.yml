@@ -1,0 +1,71 @@
+name: Assistant corrected Smart Home rerun
+
+on:
+  push:
+    branches:
+      - assistant-smart-home-corrected-rerun-20260816
+    paths:
+      - '.github/workflows/assistant-smart-home-corrected-rerun.yml'
+      - 'tools/rerun_smart_home_corrected.py'
+      - 'datasets/smart-home-energy/preprocess_smart_home.py'
+  workflow_dispatch:
+
+jobs:
+  rerun:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install pinned scientific stack
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            numpy==2.2.6 \
+            pandas==2.3.3 \
+            scipy==1.15.3 \
+            scikit-learn==1.7.2 \
+            statsmodels==0.14.6 \
+            matplotlib==3.10.7 \
+            reportlab
+
+      - name: Reconstruct corrected use_kW dataset
+        run: |
+          python datasets/smart-home-energy/preprocess_smart_home.py
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          p=Path('datasets/smart-home-energy/use_case_2_smart_home_energy.csv')
+          h=hashlib.sha256(p.read_bytes()).hexdigest()
+          expected='8211344ec98cff4287496c3daeadd7217c586d18d6b2ca68fe5bb856efd7e7dc'
+          print('dataset_sha256=',h)
+          if h != expected:
+              raise SystemExit(f'Corrected dataset hash mismatch: {h} != {expected}')
+          PY
+
+      - name: Run ARIMA and Holt-Winters independently
+        run: |
+          python tools/rerun_smart_home_corrected.py \
+            --data datasets/smart-home-energy/use_case_2_smart_home_energy.csv \
+            --output assistant-results/smart-home-corrected
+
+      - name: Print result summary
+        run: |
+          cat assistant-results/smart-home-corrected/SMART_HOME_CORRECTED_RERUN_SUMMARY.json
+
+      - name: Archive corrected dataset and independent results
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-home-corrected-usekw-arima-holtwinters
+          path: |
+            datasets/smart-home-energy/use_case_2_smart_home_energy.csv
+            assistant-results/smart-home-corrected/
+          if-no-files-found: error
+          retention-days: 14
