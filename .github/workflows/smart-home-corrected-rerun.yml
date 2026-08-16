@@ -1,0 +1,351 @@
+name: Smart-home corrected ARIMA and Holt-Winters rerun
+
+on:
+  push:
+    branches:
+      - smart-home-corrected-rerun-20260816
+  workflow_dispatch:
+
+jobs:
+  rerun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install scientific Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy==2.3.5 pandas==2.2.3 statsmodels==0.14.6 matplotlib==3.10.8
+
+      - name: Download source and run both fixed configurations
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 \
+            'https://raw.githubusercontent.com/MihaiNastase/MongoDB-IoT-Application/0afc3e385a09e23f910444a333c6556d8fad6e33/DataSetup/Data/Home.csv' \
+            -o Home.csv
+
+          cat > rerun_smart_home.py <<'PY'
+          from __future__ import annotations
+
+          import csv
+          import hashlib
+          import json
+          import math
+          import pickle
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          import matplotlib
+          matplotlib.use('Agg')
+          import matplotlib.pyplot as plt
+          import numpy as np
+          import pandas as pd
+          import statsmodels
+          from statsmodels.graphics.tsaplots import plot_acf
+          from statsmodels.tsa.arima.model import ARIMA
+          from statsmodels.tsa.holtwinters import ExponentialSmoothing
+
+          SOURCE = Path('Home.csv')
+          OUT = Path('smart_home_corrected_rerun')
+          DATA_OUT = OUT / 'use_case_2_smart_home_energy.csv'
+          EXPECTED_ROWS = 4200
+          ROWS_PER_BLOCK = 60
+          RAW_ROWS = EXPECTED_ROWS * ROWS_PER_BLOCK
+          EXPECTED_FIRST_TIME = 1451624400
+          EXPECTED_FIRST_VALUE = 0.932833333
+          EXPECTED_DATASET_SHA256 = '8211344ec98cff4287496c3daeadd7217c586d18d6b2ca68fe5bb856efd7e7dc'
+          H = 3
+          TRAIN_FRAC = 0.80
+
+          OUT.mkdir(parents=True, exist_ok=True)
+
+          # Reproduce the repository preprocessing exactly: first 252,000 consecutive
+          # source use [kW] observations, arithmetic mean of each non-overlapping
+          # 60-observation block, timestamped by the first raw observation of the block.
+          rows = []
+          selected_digest = hashlib.sha256()
+          block_sum = 0.0
+          block_count = 0
+          block_start = None
+          previous_time = None
+          selected = 0
+
+          with SOURCE.open('r', encoding='utf-8-sig', newline='') as fh:
+              reader = csv.DictReader(fh)
+              if not reader.fieldnames or 'time' not in reader.fieldnames or 'use [kW]' not in reader.fieldnames:
+                  raise RuntimeError(f'Unexpected source columns: {reader.fieldnames}')
+              for row in reader:
+                  if selected >= RAW_ROWS:
+                      break
+                  raw_time = int(float(row['time']))
+                  raw_value = float(row['use [kW]'])
+                  if selected == 0:
+                      if raw_time != EXPECTED_FIRST_TIME:
+                          raise RuntimeError(f'Unexpected first timestamp: {raw_time}')
+                      if abs(raw_value - EXPECTED_FIRST_VALUE) > 1e-9:
+                          raise RuntimeError(f'Unexpected first use [kW]: {raw_value}')
+                  if previous_time is not None and raw_time != previous_time + 1:
+                      raise RuntimeError(f'Non-consecutive timestamp at raw row {selected}: {previous_time} -> {raw_time}')
+                  previous_time = raw_time
+                  selected_digest.update(f'{raw_time},{raw_value!r}\n'.encode('utf-8'))
+                  if block_count == 0:
+                      block_start = raw_time
+                  block_sum += raw_value
+                  block_count += 1
+                  selected += 1
+                  if block_count == ROWS_PER_BLOCK:
+                      ts = datetime.fromtimestamp(block_start, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+                      rows.append((ts, block_sum / ROWS_PER_BLOCK))
+                      block_sum = 0.0
+                      block_count = 0
+                      block_start = None
+
+          if selected != RAW_ROWS or len(rows) != EXPECTED_ROWS:
+              raise RuntimeError(f'Expected {RAW_ROWS} raw / {EXPECTED_ROWS} aggregated rows; got {selected} / {len(rows)}')
+
+          with DATA_OUT.open('w', encoding='utf-8', newline='') as fh:
+              writer = csv.writer(fh, lineterminator='\n')
+              writer.writerow(['timestamp', 'use_kW'])
+              for ts, value in rows:
+                  writer.writerow([ts, repr(value)])
+
+          dataset_sha = hashlib.sha256(DATA_OUT.read_bytes()).hexdigest()
+          if dataset_sha != EXPECTED_DATASET_SHA256:
+              raise RuntimeError(f'Corrected dataset SHA mismatch: {dataset_sha} != {EXPECTED_DATASET_SHA256}')
+
+          df = pd.read_csv(DATA_OUT)
+          df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
+          y = pd.to_numeric(df['use_kW'], errors='coerce')
+          if y.isna().any() or df['timestamp'].duplicated().any():
+              raise RuntimeError('Corrected dataset contains missing target values or duplicate timestamps')
+          if len(y) != 4200:
+              raise RuntimeError(f'Unexpected corrected row count: {len(y)}')
+
+          split = int(len(y) * TRAIN_FRAC)
+          train = y.iloc[:split].copy()
+          test = y.iloc[split:].copy()
+          train_ts = df['timestamp'].iloc[:split].copy()
+          test_ts = df['timestamp'].iloc[split:].copy()
+          origins = len(test) - H + 1
+          if split != 3360 or len(test) != 840 or origins != 838:
+              raise RuntimeError(f'Unexpected split: train={split}, test={len(test)}, origins={origins}')
+
+          def metrics(true, pred):
+              true = np.asarray(true, dtype=float).reshape(-1)
+              pred = np.asarray(pred, dtype=float).reshape(-1)
+              finite = np.isfinite(true) & np.isfinite(pred)
+              true, pred = true[finite], pred[finite]
+              err = pred - true
+              mse = float(np.mean(err ** 2))
+              mae = float(np.mean(np.abs(err)))
+              rmse = float(math.sqrt(mse))
+              denom = float(np.sum((true - np.mean(true)) ** 2))
+              r2 = float(1.0 - np.sum(err ** 2) / denom) if denom > 0 else float('nan')
+              return {'N': int(len(true)), 'MAE': mae, 'RMSE': rmse, 'MSE': mse, 'R2': r2}
+
+          def write_metrics(run_dir, true_mat, pred_mat):
+              records = []
+              for h in range(H):
+                  rec = {'scope': f't+{h+1}', **metrics(true_mat[:, h], pred_mat[:, h])}
+                  records.append(rec)
+              records.append({'scope': 'overall_pooled', **metrics(true_mat.reshape(-1), pred_mat.reshape(-1))})
+              pd.DataFrame(records).to_csv(run_dir / 'metrics.csv', index=False)
+              (run_dir / 'metrics.json').write_text(json.dumps(records, indent=2, allow_nan=True), encoding='utf-8')
+              return records
+
+          def write_predictions(run_dir, true_mat, pred_mat):
+              out_rows = []
+              for origin in range(origins):
+                  rec = {'origin': origin, 'origin_timestamp': str(test_ts.iloc[origin])}
+                  for h in range(H):
+                      rec[f'target_timestamp_t+{h+1}'] = str(test_ts.iloc[origin+h])
+                      rec[f'actual_t+{h+1}'] = float(true_mat[origin, h])
+                      rec[f'prediction_t+{h+1}'] = float(pred_mat[origin, h])
+                  out_rows.append(rec)
+              pd.DataFrame(out_rows).to_csv(run_dir / 'predictions.csv', index=False)
+
+          def plot_common(run_dir, model_name, true_mat, pred_mat):
+              plot_dir = run_dir / 'plots'
+              plot_dir.mkdir(exist_ok=True)
+
+              fig, ax = plt.subplots(figsize=(11, 4.5))
+              ax.plot(df['timestamp'], y)
+              ax.set_title(f'{model_name}: corrected smart-home use_kW series')
+              ax.set_xlabel('Time')
+              ax.set_ylabel('use_kW (kW)')
+              fig.tight_layout()
+              fig.savefig(plot_dir / 'corrected_use_kW_line_plot.png', dpi=180)
+              plt.close(fig)
+
+              fig, ax = plt.subplots(figsize=(9, 4.5))
+              plot_acf(y, lags=min(120, len(y)//4), ax=ax, zero=False)
+              ax.set_title(f'{model_name}: autocorrelation of corrected use_kW')
+              fig.tight_layout()
+              fig.savefig(plot_dir / 'autocorrelation_plot.png', dpi=180)
+              plt.close(fig)
+
+              for h in range(H):
+                  fig, ax = plt.subplots(figsize=(11, 4.5))
+                  x = test_ts.iloc[h:h+origins]
+                  ax.plot(x, true_mat[:, h], label='Actual')
+                  ax.plot(x, pred_mat[:, h], label='Forecast')
+                  ax.set_title(f'{model_name}: Forecast vs Actual (t+{h+1})')
+                  ax.set_xlabel('Target time')
+                  ax.set_ylabel('use_kW (kW)')
+                  ax.legend()
+                  fig.tight_layout()
+                  fig.savefig(plot_dir / f'forecast_vs_actual_tplus{h+1}.png', dpi=180)
+                  plt.close(fig)
+
+          def write_summary(run_dir, model_name, config, metric_records):
+              summary = {
+                  'model': model_name,
+                  'configuration': config,
+                  'dataset': {
+                      'path': DATA_OUT.name,
+                      'sha256': dataset_sha,
+                      'selected_raw_pairs_sha256': selected_digest.hexdigest(),
+                      'rows': len(y),
+                      'min_kW': float(y.min()),
+                      'max_kW': float(y.max()),
+                      'mean_kW': float(y.mean()),
+                      'start_utc': str(df['timestamp'].iloc[0]),
+                      'end_utc': str(df['timestamp'].iloc[-1]),
+                  },
+                  'evaluation': {
+                      'protocol': 'chronological 80/20 split; rolling-origin fixed-parameter 3-step evaluation matching ML2++ V13.1 generator semantics',
+                      'train_observations': len(train),
+                      'test_observations': len(test),
+                      'complete_forecast_origins': origins,
+                      'horizon': H,
+                      'metrics': metric_records,
+                  },
+                  'environment': {
+                      'python_statsmodels': statsmodels.__version__,
+                      'numpy': np.__version__,
+                      'pandas': pd.__version__,
+                  },
+              }
+              (run_dir / 'run_summary.json').write_text(json.dumps(summary, indent=2, allow_nan=True), encoding='utf-8')
+              return summary
+
+          # ---------------- ARIMA(1,1,1), trend='n' ----------------
+          arima_dir = OUT / 'SmartHomeARIMA_Corrected_use_kW'
+          arima_dir.mkdir(exist_ok=True)
+          arima_model = ARIMA(train, order=(1, 1, 1), seasonal_order=(0, 0, 0, 0), trend='n')
+          arima_fit = arima_model.fit()
+          with (arima_dir / 'arima_model_fit.pickle').open('wb') as fh:
+              pickle.dump(arima_fit, fh)
+          (arima_dir / 'model_summary.txt').write_text(arima_fit.summary().as_text(), encoding='utf-8')
+
+          arima_state = arima_fit
+          arima_preds, arima_truth = [], []
+          for origin in range(origins):
+              fc = np.asarray(arima_state.forecast(steps=H), dtype=float).reshape(-1)
+              truth = np.asarray(test.iloc[origin:origin+H], dtype=float).reshape(-1)
+              if len(fc) != H or len(truth) != H:
+                  continue
+              arima_preds.append(fc)
+              arima_truth.append(truth)
+              if origin < len(test) - 1:
+                  arima_state = arima_state.append(test.iloc[origin:origin+1], refit=False)
+          arima_pred = np.vstack(arima_preds)
+          arima_true = np.vstack(arima_truth)
+          arima_metrics = write_metrics(arima_dir, arima_true, arima_pred)
+          write_predictions(arima_dir, arima_true, arima_pred)
+          plot_common(arima_dir, 'ARIMA(1,1,1)', arima_true, arima_pred)
+          arima_summary = write_summary(
+              arima_dir,
+              'ARIMA',
+              {'order': [1, 1, 1], 'seasonal_order': [0, 0, 0, 0], 'trend': 'n', 'autoML': False, 'fill_missing': 'INTERPOLATION (no effect: corrected series has no missing values)'},
+              arima_metrics,
+          )
+
+          # ---------------- Holt-Winters ----------------
+          hw_dir = OUT / 'SmartHomeHoltWinters_Corrected_use_kW'
+          hw_dir.mkdir(exist_ok=True)
+          hw_model = ExponentialSmoothing(
+              train,
+              trend='add',
+              damped_trend=True,
+              seasonal='add',
+              seasonal_periods=60,
+              initialization_method='heuristic',
+              use_boxcox=False,
+          )
+          hw_fit = hw_model.fit(optimized=True, remove_bias=False)
+          with (hw_dir / 'holt_winters_model_fit.pickle').open('wb') as fh:
+              pickle.dump(hw_fit, fh)
+          (hw_dir / 'model_summary.txt').write_text(hw_fit.summary().as_text(), encoding='utf-8')
+
+          hw_params = dict(hw_fit.params)
+          hw_history = pd.Series(train).copy()
+          hw_preds, hw_truth = [], []
+          for origin in range(origins):
+              if origin == 0:
+                  hw_state = hw_fit
+              else:
+                  base = hw_fit.model
+                  rolling_model = ExponentialSmoothing(
+                      hw_history,
+                      trend=getattr(base, 'trend', None),
+                      damped_trend=getattr(base, 'damped_trend', False),
+                      seasonal=getattr(base, 'seasonal', None),
+                      seasonal_periods=getattr(base, 'seasonal_periods', None),
+                      initialization_method='estimated',
+                  )
+                  hw_state = rolling_model.fit(
+                      smoothing_level=hw_params.get('smoothing_level'),
+                      smoothing_trend=hw_params.get('smoothing_trend'),
+                      smoothing_seasonal=hw_params.get('smoothing_seasonal'),
+                      damping_trend=hw_params.get('damping_trend'),
+                      optimized=False,
+                  )
+              fc = np.asarray(hw_state.forecast(H), dtype=float).reshape(-1)
+              truth = np.asarray(test.iloc[origin:origin+H], dtype=float).reshape(-1)
+              if len(fc) != H or len(truth) != H:
+                  continue
+              hw_preds.append(fc)
+              hw_truth.append(truth)
+              hw_history = pd.concat([hw_history, test.iloc[origin:origin+1]])
+          hw_pred = np.vstack(hw_preds)
+          hw_true = np.vstack(hw_truth)
+          hw_metrics = write_metrics(hw_dir, hw_true, hw_pred)
+          write_predictions(hw_dir, hw_true, hw_pred)
+          plot_common(hw_dir, 'Holt-Winters', hw_true, hw_pred)
+          hw_summary = write_summary(
+              hw_dir,
+              'Holt-Winters',
+              {'trend': 'add', 'damped': True, 'seasonal': 'add', 'seasonal_periods': 60, 'initialization_method': 'heuristic', 'use_boxcox': False, 'remove_bias': False, 'optimized': True, 'autoML': False, 'fill_missing': 'OFF'},
+              hw_metrics,
+          )
+
+          comparison = {
+              'dataset_sha256': dataset_sha,
+              'ARIMA': arima_summary['evaluation']['metrics'],
+              'Holt-Winters': hw_summary['evaluation']['metrics'],
+          }
+          (OUT / 'comparison.json').write_text(json.dumps(comparison, indent=2, allow_nan=True), encoding='utf-8')
+
+          print('CORRECTED_DATASET_SHA256', dataset_sha)
+          print('DATA_STATS', len(y), float(y.min()), float(y.max()), float(y.mean()))
+          print('TRAIN_TEST_ORIGINS', len(train), len(test), origins)
+          print('ARIMA_METRICS', json.dumps(arima_metrics))
+          print('HW_METRICS', json.dumps(hw_metrics))
+          PY
+
+          python rerun_smart_home.py
+
+      - name: Upload corrected rerun evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-home-corrected-arima-holtwinters
+          path: smart_home_corrected_rerun/
+          if-no-files-found: error
+          retention-days: 30
