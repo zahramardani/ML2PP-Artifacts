@@ -3,6 +3,8 @@ name: Corrected Smart-Home use_kW Rerun and Commit
 on:
   push:
     branches: [smart-home-rerun-20260820]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -37,6 +39,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Commit results to rerun branch
+        if: github.event_name == 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
