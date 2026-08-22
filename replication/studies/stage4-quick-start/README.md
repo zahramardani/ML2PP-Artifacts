@@ -14,6 +14,7 @@ The tutorial contains 13 guided tasks for the ML2++ editor and uses a prepared T
 
 - [Stage 4 questionnaire instrument and artefacts](../../questionnaires/README.md)
 - [Privacy-reviewed aggregate Stage 4 results](../../questionnaires/stage4_questionnaire_public_aggregate.csv)
+- [De-identified respondent-level Stage 4 analytical responses](../../questionnaires/stage4_questionnaire_public_deidentified_responses.csv)
 - [Complete questionnaire-instrument appendix](../../questionnaires/questionnaire_instruments.tex)
 
-The public repository contains the tutorial, instruments, and aggregate results. It does not publish participant names, age information, email addresses, or participant-level response rows.
+The respondent-level public file contains the 40 analysed rows for structured analytical variables used in the principal Stage 4 numerical summaries. Direct identifiers, timestamps/exact dates, quasi-identifying background/context fields, and fields permitting verbatim free-text responses are excluded; public IDs and row order do not preserve the administered identifiers or original submission sequence. Aggregate demographic/context counts and qualitative summaries remain in the aggregate evidence.
