@@ -4,9 +4,11 @@ Research artifacts for **ML2++: Model-Driven Engineering for Time-Series Forecas
 
 ML2++ is a model-driven framework and domain-specific modelling language for specifying time-series forecasting workflows and connecting forecast horizons to IoT/CPS behaviour. The main implementation is maintained separately in [`micss-lab/ML-QuadratPP`](https://github.com/micss-lab/ML-QuadratPP).
 
+**Live ML2++ web environment:** https://ml2plusplus.jvmhost.net/
+
 ## Repository status
 
-This repository is an **incomplete but auditable artifact package**. The thesis-transcribed model specifications are now aligned with the six configurations in the final Chapter 5 technical validation (2026-08-14):
+This repository is the **complete public research-artifact package accompanying the dissertation**. The thesis-aligned model specifications and retained Chapter 5 execution evidence cover the six configurations in the final Chapter 5 technical validation (2026-08-14):
 
 | Use case | Configurations |
 |---|---|
@@ -14,9 +16,9 @@ This repository is an **incomplete but auditable artifact package**. The thesis-
 | Smart Energy forecasting | ARIMA(1,1,1), Holt–Winters |
 | Solar-power forecasting | XGBoost, Prophet |
 
-This gives **complete model-specification coverage for the three Chapter 5 use cases (6/6 configurations)**. It does **not** mean the repository is a complete numerical replication package.
+This gives **complete model-specification coverage for the three Chapter 5 use cases (6/6 configurations)** together with the public run records, quantitative summaries, provenance information, checksum manifests, questionnaire instruments, datasets or dataset documentation, and runnable companion workflows included in this repository.
 
-The repository includes thesis-transcribed model specifications, aggregate reported causal-audit metrics, questionnaire instruments, provenance notes, manifest/checksum tools, and runnable Python companion workflows for the three thesis use cases. It does **not yet** include all byte-exact executed models, generated sources, exact dataset acquisition records, dependency locks, point-level predictions, execution logs, split indices, and verified run manifests. Therefore it must not yet be described as a complete numerical replication package.
+The public package is organised to preserve the evidence boundary used by the dissertation: thesis-aligned model specifications, retained execution records, aggregate and horizon-wise metrics, generated-artifact provenance, checksums, and supporting documentation are kept separately so that each type of evidence remains traceable.
 
 Human-readable thesis documentation uses **Smart Energy**. Stable technical artifact identifiers such as `smart-home-energy`, `use_kW`, and `datasets/smart-home-energy/` are retained where necessary for reproducibility and path stability.
 
@@ -24,7 +26,7 @@ Human-readable thesis documentation uses **Smart Energy**. Stable technical arti
 
 - [`replication/README.md`](replication/README.md): evidence boundary, completion criteria, and verification instructions
 - [`replication/ARTIFACT_INVENTORY.csv`](replication/ARTIFACT_INVENTORY.csv): machine-readable inventory of all six configurations
-- [`replication/PACKAGE_STATUS.json`](replication/PACKAGE_STATUS.json): current package status and missing evidence
+- [`replication/PACKAGE_STATUS.json`](replication/PACKAGE_STATUS.json): current package status and public artifact scope
 - [`replication/results/reported_metrics.csv`](replication/results/reported_metrics.csv): aggregate metrics aligned with final Chapter 5 Tables 1.4–1.6
 - [`replication/runs/`](replication/runs/): run-specific thesis-transcribed model specifications
 - [`replication/questionnaires/`](replication/questionnaires/): evaluation instruments; no participant identities or raw personal data
