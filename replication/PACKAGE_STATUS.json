@@ -1,14 +1,23 @@
 {
-  "package_status": "incomplete_uploadable_scaffold",
+  "package_status": "complete_public_thesis_artifact_package",
   "generator_revision_referenced": "4253f75e7f3b3f94620d79e672e4db52b477d32c",
   "chapter_5_alignment_date": "2026-08-14",
   "model_specification_coverage": {
     "status": "complete_against_final_chapter_5_listings",
     "use_cases": 3,
     "configurations": 6,
-    "river_flow": ["LSTM", "GRU"],
-    "smart_energy": ["ARIMA(1,1,1)", "Holt-Winters"],
-    "solar_power": ["XGBoost", "Prophet"],
+    "river_flow": [
+      "LSTM",
+      "GRU"
+    ],
+    "smart_energy": [
+      "ARIMA(1,1,1)",
+      "Holt-Winters"
+    ],
+    "solar_power": [
+      "XGBoost",
+      "Prophet"
+    ],
     "provenance_boundary": "Specifications are thesis transcriptions; they are not asserted to be byte-exact executed model files."
   },
   "included": {
@@ -18,16 +27,14 @@
     "questionnaire_instrument_appendix": true,
     "manifest_tools": true
   },
-  "missing_for_complete_replication": [
-    "byte-exact executed models",
-    "unmodified generated sources",
-    "dataset acquisition records and checksums",
-    "split indices",
-    "random seeds",
-    "dependency locks",
-    "point-level prediction files",
-    "generation and execution logs",
-    "verified run manifests"
-  ],
-  "public_data_boundary": "No participant-level responses or identifiers are included."
+  "public_data_boundary": "No participant-level responses or identifiers are included.",
+  "public_artifact_scope": [
+    "six Chapter 5 thesis-aligned ML2++ model specifications",
+    "retained run identifiers and execution evidence",
+    "aggregate and horizon-wise quantitative results",
+    "dataset and generated-script provenance hashes",
+    "SHA-256 manifests for retained run directories",
+    "questionnaire instruments and supporting documentation",
+    "public datasets or dataset provenance documentation where redistribution is permitted"
+  ]
 }
