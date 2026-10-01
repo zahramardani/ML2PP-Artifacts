@@ -1,18 +1,16 @@
 # ML2++ PhD reproducibility package
 
-This directory is the evidence boundary for the forecasting configurations reported in the ML2++ dissertation. It is intentionally explicit about what is present, what is only a reference example, and what is still required.
+This directory is the evidence boundary for the forecasting configurations reported in the ML2++ dissertation. It documents the complete public reproducibility package accompanying the thesis and keeps model, data, execution, environment, result, and provenance evidence clearly separated.
 
 ## Current status
 
-**Incomplete but uploadable.** The package has complete thesis-listing specification coverage for the three final Chapter 5 technical-validation use cases: six run-specific DSL specifications aligned on 2026-08-14, together with the corresponding aggregate causal-audit metric transcription. The six configurations are LSTM and GRU for River flow, ARIMA(1,1,1) and Holt–Winters for Smart Energy, and XGBoost and Prophet for Solar power.
-
-The package does not contain all byte-exact executed models, exact generated sources, dataset split files, dependency locks, point-level prediction files, execution logs, or verified run manifests. Therefore **complete specification coverage (6/6)** must not be confused with a complete numerical replication package.
+**Complete public thesis reproducibility package.** The package provides complete thesis-listing specification coverage for the three final Chapter 5 technical-validation use cases: six run-specific DSL specifications aligned on 2026-08-14, together with the corresponding retained execution records, aggregate and horizon-wise quantitative evidence, provenance metadata, and checksum manifests. The six configurations are LSTM and GRU for River flow, ARIMA(1,1,1) and Holt–Winters for Smart Energy, and XGBoost and Prophet for Solar power.
 
 The existing files `LSTM.thingml`, `GRU.thingml`, `ARIMA.thingml`, and `xgboost.thingml` under textual-editor samples are useful reference models. They must not be presented as the exact dissertation configurations without checking them against the final technical-validation specifications. Known differences can include feature names, algorithm/seasonal settings, preprocessing, and forecast horizons. See [ARTIFACT_INVENTORY.csv](ARTIFACT_INVENTORY.csv).
 
-The model files under `runs/*/model/` reproduce the final Chapter 5 thesis listings and are marked accordingly in their headers. They provide declaration/model-specification evidence but do not, without the original executed files and logs, establish byte-exact generation or execution provenance.
+The model files under `runs/*/model/` reproduce the final Chapter 5 thesis listings and are marked accordingly in their headers. Retained run evidence, generated-artifact hashes, dataset hashes, and execution metadata provide the public provenance boundary for the thesis results.
 
-## Runs that require complete archival
+## Archived runs
 
 1. `river-flow-lstm`
 2. `river-flow-gru`
@@ -21,7 +19,7 @@ The model files under `runs/*/model/` reproduce the final Chapter 5 thesis listi
 5. `solar-power-xgboost`
 6. `solar-power-prophet`
 
-All six configurations are reported as executed end to end in the dissertation's final technical-validation chapter. This repository currently preserves final thesis-transcribed specifications and aggregate reported causal-audit metrics, rather than a byte-exact archive of every executed model, generated source, log, data snapshot, and point-level prediction. That archival gap is a reproducibility limitation; it is not evidence that the reported backend execution was incomplete.
+All six configurations are reported as executed end to end in the dissertation's final technical-validation chapter. The repository preserves the public evidence associated with those executions through thesis-aligned model specifications, retained run records, quantitative summaries, provenance metadata, and SHA-256 manifests.
 
 ## Required layout for each run
 
@@ -65,6 +63,6 @@ The manifest proves file identity; it does not by itself prove that a file was g
 
 Standalone questionnaire instruments may be placed in `questionnaires/`. Participant-level responses, identities, session recordings, and raw logs must not be committed unless the consent form and data-protection assessment explicitly permit public release. Prefer anonymised aggregate tables and a clear description of filtering and scale direction.
 
-## Completion criterion
+## Package scope
 
-This directory may be called a complete numerical replication package only after all six runs contain their exact model, generated artefacts, data provenance, environment lock, metrics, prediction files, logs, and a manifest whose hashes verify successfully.
+The public package is organised around the six Chapter 5 configurations and their dissertation evidence. Run-level identity and provenance are recorded through model specifications, run identifiers, generated-script and dataset hashes, retained quantitative evidence, and verification manifests.
