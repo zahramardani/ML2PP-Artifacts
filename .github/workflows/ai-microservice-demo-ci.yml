@@ -1,0 +1,32 @@
+name: AI Microservice Demo CI
+
+on:
+  push:
+    paths:
+      - 'portfolio/ai-microservice-demo/**'
+      - '.github/workflows/ai-microservice-demo-ci.yml'
+  pull_request:
+    paths:
+      - 'portfolio/ai-microservice-demo/**'
+      - '.github/workflows/ai-microservice-demo-ci.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: portfolio/ai-microservice-demo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: pytest -q
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+      - run: go vet ./...
+        working-directory: portfolio/ai-microservice-demo/go-gateway
+      - run: go build ./...
+        working-directory: portfolio/ai-microservice-demo/go-gateway
