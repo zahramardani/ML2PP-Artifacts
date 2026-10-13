@@ -48,6 +48,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
+
 uvicorn app.main:app --reload
 ```
 
@@ -114,6 +115,31 @@ A production RAG system should evaluate:
 - faithfulness / groundedness
 - citation correctness
 - latency and cost
+
+## RAG evaluation
+
+The repository includes a reviewed evaluation set and scripts under `evaluation/`.
+
+Run retrieval evaluation:
+
+```bash
+PYTHONPATH=. python -m evaluation.evaluate_retrieval --backend lexical --k 3
+```
+
+Reported metrics include:
+
+- Hit Rate@K
+- Precision@K
+- Recall@K
+- MRR
+- average and P95 retrieval latency
+
+Generated-answer evaluation is kept separate and includes citation correctness,
+keyword coverage, and a lightweight unsupported-number hallucination check.
+For production use, extend this with semantic faithfulness / groundedness and
+answer-relevance judging.
+
+See [`evaluation/README.md`](evaluation/README.md).
 
 ## Production extensions
 
