@@ -1,0 +1,50 @@
+[
+  {
+    "id": "q1",
+    "question": "Why is random train-test splitting risky in time-series forecasting?",
+    "expected_sources": ["forecasting_validation.md"],
+    "expected_answer_keywords": ["future", "leakage", "temporal"]
+  },
+  {
+    "id": "q2",
+    "question": "What is a persistence baseline and why should I use it?",
+    "expected_sources": ["forecasting_validation.md"],
+    "expected_answer_keywords": ["baseline", "complex", "predictive"]
+  },
+  {
+    "id": "q3",
+    "question": "What is the difference between lag and forecast horizon?",
+    "expected_sources": ["forecasting_validation.md"],
+    "expected_answer_keywords": ["historical", "future", "horizon"]
+  },
+  {
+    "id": "q4",
+    "question": "Which forecasting models are used in ML2++?",
+    "expected_sources": ["ml2pp_overview.md"],
+    "expected_answer_keywords": ["LSTM", "GRU", "ARIMA", "XGBoost", "Prophet"]
+  },
+  {
+    "id": "q5",
+    "question": "What does ML2++ automate?",
+    "expected_sources": ["ml2pp_overview.md"],
+    "expected_answer_keywords": ["forecasting", "workflow", "code generation"]
+  },
+  {
+    "id": "q6",
+    "question": "Why should preprocessing be fitted without future information?",
+    "expected_sources": ["forecasting_validation.md"],
+    "expected_answer_keywords": ["leakage", "scaling", "imputation"]
+  },
+  {
+    "id": "q7",
+    "question": "What metrics can I use to evaluate point forecasts?",
+    "expected_sources": ["forecasting_validation.md"],
+    "expected_answer_keywords": ["MAE", "RMSE"]
+  },
+  {
+    "id": "q8",
+    "question": "Which domains are covered by the ML2++ forecasting use cases?",
+    "expected_sources": ["ml2pp_overview.md"],
+    "expected_answer_keywords": ["river", "energy", "solar"]
+  }
+]
