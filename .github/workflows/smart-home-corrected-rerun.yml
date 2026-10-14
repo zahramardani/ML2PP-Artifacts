@@ -1,0 +1,186 @@
+name: Corrected Smart-Home use_kW Rerun
+
+on:
+  push:
+    branches: [smart-home-rerun-20260820]
+  workflow_dispatch:
+
+jobs:
+  rerun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy==2.3.5 pandas==2.2.3 statsmodels==0.14.6 matplotlib==3.10.8
+      - name: Reconstruct corrected use_kW and rerun models
+        shell: bash
+        run: |
+          cat > /tmp/rerun.py <<'PY'
+          from __future__ import annotations
+          import csv, hashlib, json, math, os, urllib.request, warnings, zipfile
+          from datetime import datetime, timezone
+          from pathlib import Path
+          import numpy as np
+          import pandas as pd
+          import matplotlib
+          matplotlib.use('Agg')
+          import matplotlib.pyplot as plt
+          from statsmodels.tsa.arima.model import ARIMA
+          from statsmodels.tsa.holtwinters import ExponentialSmoothing
+          from statsmodels.graphics.tsaplots import plot_acf
+
+          warnings.filterwarnings('ignore')
+          SOURCE='https://raw.githubusercontent.com/MihaiNastase/MongoDB-IoT-Application/main/DataSetup/Data/Home.csv'
+          EXPECTED_RAW='fd0e874c6c7766fec60bd7c4f2b697ace85e0d558bba33a9dc2fad29b8ef3801'
+          EXPECTED_CSV='8211344ec98cff4287496c3daeadd7217c586d18d6b2ca68fe5bb856efd7e7dc'
+          N_RAW=252000; BLOCK=60; N_OUT=4200; H=3
+          root=Path('SmartHome_Corrected_usekW_Reruns_2026-08-20')
+          ardir=root/'ARIMA'; hwdir=root/'HoltWinters'
+          for d in [root, ardir, hwdir]: d.mkdir(parents=True, exist_ok=True)
+
+          # Stream the exact first 252,000 source observations from the public HomeC copy.
+          req=urllib.request.Request(SOURCE, headers={'User-Agent':'ML2PP-repro/1.0'})
+          times=[]; vals=[]; digest=hashlib.sha256()
+          with urllib.request.urlopen(req, timeout=180) as resp:
+              import io
+              txt=io.TextIOWrapper(resp, encoding='utf-8-sig', newline='')
+              reader=csv.DictReader(txt)
+              for row in reader:
+                  if len(vals)>=N_RAW: break
+                  t=int(float(row['time'])); v=float(row['use [kW]'])
+                  if vals and t!=times[-1]+1: raise RuntimeError(f'nonconsecutive timestamp {times[-1]}->{t}')
+                  if not vals and (t!=1451624400 or abs(v-0.932833333)>1e-9): raise RuntimeError('unexpected source first observation')
+                  times.append(t); vals.append(v)
+                  digest.update(f'{t},{v!r}\n'.encode())
+          if len(vals)!=N_RAW: raise RuntimeError(f'expected {N_RAW} raw rows, got {len(vals)}')
+          raw_sha=digest.hexdigest()
+          if raw_sha!=EXPECTED_RAW: raise RuntimeError(f'raw digest mismatch: {raw_sha}')
+
+          rows=[]
+          for i in range(0,N_RAW,BLOCK):
+              ts=datetime.fromtimestamp(times[i], tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+              # Sequential Python sum exactly matches the archived reconstruction script.
+              s=0.0
+              for v in vals[i:i+BLOCK]: s += v
+              rows.append((ts, s/BLOCK))
+          dataset=root/'use_case_2_smart_home_energy.csv'
+          with dataset.open('w',encoding='utf-8',newline='') as f:
+              w=csv.writer(f,lineterminator='\n'); w.writerow(['timestamp','use_kW'])
+              for ts,v in rows: w.writerow([ts,repr(v)])
+          csv_sha=hashlib.sha256(dataset.read_bytes()).hexdigest()
+          if csv_sha!=EXPECTED_CSV: raise RuntimeError(f'corrected CSV digest mismatch: {csv_sha}')
+
+          df=pd.DataFrame(rows,columns=['timestamp','use_kW'])
+          df['timestamp']=pd.to_datetime(df['timestamp'], utc=True)
+          values=df['use_kW'].astype(float).reset_index(drop=True)
+          stats={'rows':len(df),'start':str(df.timestamp.iloc[0]),'end':str(df.timestamp.iloc[-1]),
+                 'min':float(values.min()),'max':float(values.max()),'mean':float(values.mean()),
+                 'raw_pairs_sha256':raw_sha,'dataset_sha256':csv_sha}
+          if not (abs(stats['min']-0.0008)<1e-9 and abs(stats['max']-4.302675)<1e-9 and abs(stats['mean']-0.775213)<1e-6):
+              raise RuntimeError(f'unexpected dataset stats: {stats}')
+          (root/'dataset_validation.json').write_text(json.dumps(stats,indent=2),encoding='utf-8')
+
+          split=int(len(values)*0.8)
+          train=values.iloc[:split].copy(); test=values.iloc[split:].copy()
+          assert len(train)==3360 and len(test)==840
+
+          def metrics(y,p):
+              y=np.asarray(y,float); p=np.asarray(p,float); m=np.isfinite(y)&np.isfinite(p); y=y[m];p=p[m]
+              err=y-p; mse=float(np.mean(err**2)); mae=float(np.mean(np.abs(err))); rmse=float(np.sqrt(mse))
+              ss_res=float(np.sum(err**2)); ss_tot=float(np.sum((y-y.mean())**2)); r2=float(1-ss_res/ss_tot) if ss_tot else float('nan')
+              return {'N':int(len(y)),'MAE':mae,'RMSE':rmse,'MSE':mse,'R2':r2}
+
+          def save_outputs(name, outdir, truth, pred, extra=None):
+              truth=np.asarray(truth,float); pred=np.asarray(pred,float)
+              rec=[]
+              for h in range(H):
+                  mm=metrics(truth[:,h],pred[:,h]); rec.append({'Horizon':f't+{h+1}',**mm})
+                  pd.DataFrame({'Actual':truth[:,h],'Forecast':pred[:,h],'Error':truth[:,h]-pred[:,h]}).to_csv(outdir/f'forecast_values_horizon_t_plus_{h+1:02d}.csv',index_label='Sample')
+                  fig,ax=plt.subplots(figsize=(12.8,6.4)); x=np.arange(len(truth))
+                  ax.plot(x,truth[:,h],label='Actual',linewidth=1.6); ax.plot(x,pred[:,h],label='Forecast',linewidth=1.4)
+                  ax.set_title(f'{name}: Forecast vs Actual — Horizon t+{h+1}'); ax.set_xlabel('Held-out forecast origin'); ax.set_ylabel('use_kW'); ax.legend(); fig.tight_layout()
+                  fig.savefig(outdir/f'forecast_vs_actual_horizon_t_plus_{h+1:02d}.png',dpi=220,bbox_inches='tight'); plt.close(fig)
+              md=pd.DataFrame(rec); md.to_csv(outdir/'forecast_metrics_by_horizon.csv',index=False)
+              overall=metrics(truth.reshape(-1),pred.reshape(-1))
+              payload={'model':name,'train_rows':len(train),'test_rows':len(test),'forecast_origins':int(len(truth)),'horizon':H,'overall':overall,'by_horizon':rec,'dataset_sha256':csv_sha}
+              if extra: payload.update(extra)
+              (outdir/'model_evaluation.json').write_text(json.dumps(payload,indent=2),encoding='utf-8')
+              return payload
+
+          # ARIMA: generator-faithful rolling-origin evaluation with fixed fitted parameters.
+          ar_fit=ARIMA(train,order=(1,1,1),seasonal_order=(0,0,0,0),trend='n').fit()
+          state=ar_fit; arp=[]; art=[]
+          for origin in range(len(test)-H+1):
+              arp.append(np.asarray(state.forecast(steps=H),float).reshape(-1))
+              art.append(test.iloc[origin:origin+H].to_numpy(float))
+              if origin < len(test)-1:
+                  state=state.append(test.iloc[origin:origin+1],refit=False)
+          arp=np.vstack(arp); art=np.vstack(art)
+          arres=save_outputs('ARIMA(1,1,1)',ardir,art,arp,{'trend':'n','evaluation':'rolling-origin; fitted parameters fixed; actual observations appended without refit'})
+          (ardir/'fitted_parameters.json').write_text(json.dumps({k:float(v) for k,v in zip(ar_fit.param_names,ar_fit.params)},indent=2),encoding='utf-8')
+
+          # Holt-Winters: generator-faithful fixed-smoothing-parameter rolling-origin evaluation.
+          hw_model=ExponentialSmoothing(train,trend='add',damped_trend=True,seasonal='add',seasonal_periods=60,initialization_method='heuristic',use_boxcox=False)
+          hw_fit=hw_model.fit(optimized=True,remove_bias=False)
+          params=dict(hw_fit.params); history=pd.Series(train).copy(); hwp=[]; hwt=[]
+          for origin in range(len(test)-H+1):
+              if origin==0:
+                  st=hw_fit
+              else:
+                  base=hw_fit.model
+                  mm=ExponentialSmoothing(history,trend=getattr(base,'trend',None),damped_trend=getattr(base,'damped_trend',False),seasonal=getattr(base,'seasonal',None),seasonal_periods=getattr(base,'seasonal_periods',None),initialization_method='estimated')
+                  st=mm.fit(smoothing_level=params.get('smoothing_level'),smoothing_trend=params.get('smoothing_trend'),smoothing_seasonal=params.get('smoothing_seasonal'),damping_trend=params.get('damping_trend'),optimized=False)
+              hwp.append(np.asarray(st.forecast(H),float).reshape(-1)); hwt.append(test.iloc[origin:origin+H].to_numpy(float))
+              history=pd.concat([history,test.iloc[origin:origin+1]])
+          hwp=np.vstack(hwp); hwt=np.vstack(hwt)
+          hwres=save_outputs('Holt-Winters additive damped',hwdir,hwt,hwp,{'seasonal_periods':60,'evaluation':'rolling-origin; smoothing parameters fixed after initial optimization'})
+          simple_params={}
+          for k,v in params.items():
+              if np.isscalar(v) and not isinstance(v,(str,bytes)): 
+                  try: simple_params[k]=float(v)
+                  except: pass
+          (hwdir/'fitted_parameters.json').write_text(json.dumps(simple_params,indent=2),encoding='utf-8')
+
+          # HW declared descriptive plots.
+          fig,ax=plt.subplots(figsize=(12.8,5.8)); ax.plot(np.arange(len(values)),values.to_numpy()); ax.set_title('Corrected smart-home use_kW series'); ax.set_xlabel('Minute index'); ax.set_ylabel('use_kW'); fig.tight_layout(); fig.savefig(hwdir/'line_use_kW.png',dpi=220,bbox_inches='tight'); plt.close(fig)
+          fig,ax=plt.subplots(figsize=(12.8,5.8)); plot_acf(values,lags=min(120,len(values)-1),ax=ax); ax.set_title('Autocorrelation of corrected use_kW series'); fig.tight_layout(); fig.savefig(hwdir/'acf_use_kW.png',dpi=220,bbox_inches='tight'); plt.close(fig)
+
+          comp=[]
+          for r in [arres,hwres]:
+              for hrow in r['by_horizon']: comp.append({'Model':r['model'],**hrow})
+          pd.DataFrame(comp).to_csv(root/'combined_metrics_by_horizon.csv',index=False)
+          pd.DataFrame([{'Model':arres['model'],**arres['overall']},{'Model':hwres['model'],**hwres['overall']}]).to_csv(root/'combined_overall_metrics.csv',index=False)
+
+          # Thesis-ready LaTeX table, no machine-specific paths.
+          def f(x): return f'{x:.6f}'
+          tex=['% Corrected smart-home rerun: use_kW, 80/20 chronological split, 838 rolling origins','\\begin{table}[!ht]','\\centering','\\caption{Corrected smart-home forecasting performance on the held-out partition.}','\\begin{tabular}{llrrrrr}','\\toprule','Model & Horizon & $N$ & MAE & RMSE & MSE & $R^2$ \\\\','\\midrule']
+          for r in [arres,hwres]:
+              for h in r['by_horizon']:
+                  tex.append(f"{r['model']} & {h['Horizon']} & {h['N']} & {f(h['MAE'])} & {f(h['RMSE'])} & {f(h['MSE'])} & {f(h['R2'])} \\\\")
+          tex += ['\\bottomrule','\\end{tabular}','\\end{table}']
+          (root/'CHAPTER5_SMARTHOME_RESULTS.tex').write_text('\n'.join(tex)+'\n',encoding='utf-8')
+
+          summary=f'''# Corrected Smart-Home use_kW rerun\n\nDataset SHA-256: `{csv_sha}`\nRaw selected-pairs SHA-256: `{raw_sha}`\nRows: 4,200; train: 3,360; test: 840; complete rolling origins: 838; horizon: 3.\n\n## Overall held-out metrics\n\n- ARIMA(1,1,1): RMSE = {arres['overall']['RMSE']:.9f}, MAE = {arres['overall']['MAE']:.9f}, R2 = {arres['overall']['R2']:.9f}, N = {arres['overall']['N']}\n- Holt-Winters: RMSE = {hwres['overall']['RMSE']:.9f}, MAE = {hwres['overall']['MAE']:.9f}, R2 = {hwres['overall']['R2']:.9f}, N = {hwres['overall']['N']}\n\nThe evaluation reproduces the rolling-origin semantics observed in the retained ML2++ generated training scripts. This is a generator-faithful Python rerun; it is not claimed as a fresh Java/Maven compiler invocation.\n'''
+          (root/'RUN_SUMMARY.md').write_text(summary,encoding='utf-8')
+
+          # Hash every evidence file except the hash list itself.
+          lines=[]
+          for p in sorted(root.rglob('*')):
+              if p.is_file() and p.name!='SHA256SUMS.txt': lines.append(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.relative_to(root)}")
+          (root/'SHA256SUMS.txt').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          print(summary)
+          PY
+          python /tmp/rerun.py
+      - name: Upload one evidence package
+        uses: actions/upload-artifact@v4
+        with:
+          name: SmartHome-ARIMA-HoltWinters-Corrected-usekW-2026-08-20
+          path: SmartHome_Corrected_usekW_Reruns_2026-08-20/
+          if-no-files-found: error
+          retention-days: 30
