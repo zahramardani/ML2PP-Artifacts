@@ -73,3 +73,32 @@ Replace the placeholder image repository in `helm/values.yaml` before deploying.
 ## Scope
 
 This is intentionally a small portfolio demonstration rather than a production system. A production version would add authentication, migrations, secrets management, tracing/metrics, structured logging, rate limiting, model registry/versioning, and a managed database.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+The FastAPI anomaly-detection demonstration, database integration, Go gateway and deployment packaging.
+
+[Parent folder](../) · [Repository overview](../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [.github/](.github/) | A workflow definition packaged inside the microservice example. GitHub discovers runnable workflows under the repository-root .github/workflows directory; consult those root definitions for the active configuration. |
+| [app/](app/) | The Python API, input/output schemas, model, persistence helpers and optional explanation integration. |
+| [go-gateway/](go-gateway/) | The small Go HTTP gateway packaged with the AI microservice demonstration. |
+| [helm/](helm/) | Chart metadata, configurable values and Kubernetes templates for the microservice example. |
+| [k8s/](k8s/) | Standalone Deployment and Service YAML files packaged with the microservice demonstration. |
+| [tests/](tests/) | Tests for the microservice demonstration's API behavior. |
+| [.env.example](.env.example) | Example environment-variable configuration. |
+| [.gitignore](.gitignore) | Patterns excluding local caches, environments or generated outputs from new commits. |
+| [docker-compose.yml](docker-compose.yml) | Local multi-service Docker Compose configuration. |
+| [Dockerfile](Dockerfile) | Container-image build instructions for this application. |
+| [pytest.ini](pytest.ini) | Pytest collection and import-path settings. |
+| [requirements.txt](requirements.txt) | Python dependency list for this component. |
+
+**Start here:** [.github/](.github/).
+
+<!-- END FOLDER GUIDE -->

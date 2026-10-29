@@ -10,3 +10,21 @@ with the original `pip freeze`, Conda lock, Poetry lock or container digest
 before claiming exact reproduction. Record the operating system, CPU/GPU,
 CUDA/cuDNN versions where applicable, Java/JDK version, generator build, and
 the exact command for every run.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+Existing notes about the software environment and dependency-template file.
+
+[Parent folder](../) · [Repository overview](../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [requirements.template.txt](requirements.template.txt) | Existing template for documenting dependency versions. |
+
+**Start here:** [requirements.template.txt](requirements.template.txt).
+
+<!-- END FOLDER GUIDE -->

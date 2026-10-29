@@ -15,3 +15,21 @@ Store tutorials, architecture descriptions, screenshots, demonstrations, and sup
 | [Portfolio index](../portfolio/README.md) | Independent software demonstrations |
 
 The navigation documents supplement the existing material; they do not change thesis content or research results.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+Navigation guides explaining where to find the existing research artifacts and independent software examples.
+
+[Parent folder](../) · [Repository overview](../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [REPOSITORY_GUIDE.md](REPOSITORY_GUIDE.md) | Research-artifact and companion-project navigation. |
+
+**Start here:** [REPOSITORY_GUIDE.md](REPOSITORY_GUIDE.md).
+
+<!-- END FOLDER GUIDE -->

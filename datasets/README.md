@@ -15,3 +15,24 @@ This directory contains checked processed research inputs where they can be depo
 - Solar: 796 observed hourly records from 15 May through 17 June 2020. A complete hourly index has 816 timestamps, revealing 20 absent hours. Night-time zero production is preserved.
 
 These are processed research subsets. Their data-quality, transformation, and provenance boundaries are documented in the corresponding subdirectory README and PDF data card.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+Dataset files, data cards, preprocessing resources and provenance documentation for the three forecasting use cases.
+
+[Parent folder](../) · [Repository overview](../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [river-flow/](river-flow/) | The deposited river-flow CSV and its existing data card and provenance documentation. |
+| [smart-home-energy/](smart-home-energy/) | The Smart Energy preprocessing script, checksum record and data card. Use the existing dataset documentation for the target definition and reconstruction procedure. |
+| [solar-power/](solar-power/) | The deposited hourly solar-power CSV and its existing data card and provenance documentation. |
+| [catalog.csv](catalog.csv) | Machine-readable dataset catalog. |
+
+**Start here:** [river-flow/](river-flow/).
+
+<!-- END FOLDER GUIDE -->

@@ -34,3 +34,22 @@ SARIMA is intentionally not part of the Chapter 5 technical-validation set. It b
 ## Scope
 
 These artifacts support the scoped technical-validation claims in Chapter 5. They do not establish exhaustive coverage of the ML2++ grammar, every supported or anticipated algorithm, every hyperparameter combination, or production deployment readiness.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+The existing Chapter 5 collection, with model instances and per-configuration run-record folders.
+
+[Parent folder](../) · [Repository overview](../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [model-instances/](model-instances/) | The six deposited ThingML model files in the Chapter 5 collection. Their original contents are retained. |
+| [run-records/](run-records/) | Per-configuration folders containing the deposited run-evidence document and full-run checksum list. |
+
+**Start here:** [model-instances/](model-instances/).
+
+<!-- END FOLDER GUIDE -->

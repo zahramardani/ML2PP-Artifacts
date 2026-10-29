@@ -24,3 +24,15 @@ A byte-exact archived executed model, when available, should preserve at minimum
 - runtime binding/configuration.
 
 The remaining requirements for full replication are tracked in `../PACKAGE_STATUS.json`.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+Existing documentation about the research model specifications and their organization.
+
+[Parent folder](../) · [Repository overview](../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+This directory currently contains its README only. The existing text above explains the intended role of this documentation area.
+
+<!-- END FOLDER GUIDE -->

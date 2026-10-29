@@ -66,3 +66,40 @@ Supervisors: João Carlos Ferreira, Armin Moin, and Alberto Rodrigues da Silva.
 - [Engineering portfolio](portfolio/README.md): application setup entry points.
 
 These navigation additions do not revise the dissertation's text, model configurations, datasets, reported results or existing research-status records.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+The repository entry point for ML2++ research artifacts, forecasting use cases, replication documentation and companion software.
+
+[Repository overview](README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [.github/](.github/) | Repository-level GitHub configuration, including the automated-check workflow definitions. |
+| [datasets/](datasets/) | Dataset files, data cards, preprocessing resources and provenance documentation for the three forecasting use cases. |
+| [docs/](docs/) | Navigation guides explaining where to find the existing research artifacts and independent software examples. |
+| [evaluation/](evaluation/) | The documentation area describing how evaluation protocols, instruments, measurements and analyses are organized. |
+| [examples/](examples/) | Companion implementations that can be inspected and run alongside the research documentation. |
+| [experiments/](experiments/) | Documentation describing the organization of experiment settings, environments, splits and outputs. |
+| [generated-artifacts/](generated-artifacts/) | The artifact documentation area, including the deposited Chapter 5 model instances and retained text evidence. |
+| [generators/](generators/) | Documentation describing the organization of ML2++ transformations, templates and generation resources. |
+| [language/](language/) | Documentation describing the organization of ML2++ metamodel, grammar, editor and validation resources. |
+| [portfolio/](portfolio/) | Application prototypes with their own setup guides, dependencies and tests, alongside the research artifacts. |
+| [publications/](publications/) | Publication-related documentation and deposited bibliography material. |
+| [replication/](replication/) | The research-package instructions, configuration inventory, run folders, study material and manifest utilities. |
+| [thesis/](thesis/) | The dissertation-related files deposited in this repository, currently organized under the source subfolder. |
+| [use-cases/](use-cases/) | The existing documentation describing how use-case model instances, data and forecasting settings are organized. |
+| [.gitignore](.gitignore) | Patterns excluding local caches, environments or generated outputs from new commits. |
+| [ARTIFACT_MAP.md](ARTIFACT_MAP.md) | Existing mapping between dissertation topics and artifact locations. |
+| [CITATION.cff](CITATION.cff) | Citation metadata for the research artifact collection. |
+| [LICENSE_STATUS.md](LICENSE_STATUS.md) | Existing licensing-status documentation. |
+| [PROJECTS.md](PROJECTS.md) | Account-wide project catalog and project entry points. |
+| [USE_CASES.md](USE_CASES.md) | Existing descriptions of the three research use cases. |
+
+**Start here:** [PROJECTS.md](PROJECTS.md).
+
+<!-- END FOLDER GUIDE -->

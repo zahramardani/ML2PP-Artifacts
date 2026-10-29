@@ -12,3 +12,15 @@ Each completed run should include:
 
 Values transcribed from a thesis table are documentation, not a substitute
 for the original prediction and metric files.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+Existing instructions for organizing run-level predictions, metrics and figures for River flow: GRU.
+
+[Parent folder](../) · [Repository overview](../../../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+This directory currently contains its README only. The existing text above explains the intended role of this documentation area.
+
+<!-- END FOLDER GUIDE -->

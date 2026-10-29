@@ -39,3 +39,26 @@ bounds.
 No names, email addresses, signatures, consent forms, raw scans, file
 metadata, or participant free-text responses are included. Participant
 identifiers are pseudonyms used consistently in the thesis.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+The existing Study 1 documentation, questionnaire files and artifacts from manual coding, IoT integration and ML2++ adaptation.
+
+[Parent folder](../) · [Repository overview](../../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [questionnaire_responses/](questionnaire_responses/) | Questionnaire PDF folders organized by the existing participant IDs P1 through P8. |
+| [step1-manual-coding/](step1-manual-coding/) | The source archives and upload-status documentation deposited for the manual Python workflow stage. |
+| [step2-iot-integration/](step2-iot-integration/) | The source archives and upload-status documentation deposited for the IoT-integration stage. |
+| [step3-ml2-integration/](step3-ml2-integration/) | The deposited ThingML models, Java and Python sources and Maven build file from the ML2++ adaptation stage. |
+| [DATA_DICTIONARY.md](DATA_DICTIONARY.md) | Existing definitions of study fields and measurement conventions. |
+| [RESTRICTED_DATA_NOTICE.md](RESTRICTED_DATA_NOTICE.md) | Existing notice describing restricted study material. |
+
+**Start here:** [DATA_DICTIONARY.md](DATA_DICTIONARY.md).
+
+<!-- END FOLDER GUIDE -->

@@ -18,3 +18,15 @@ The tutorial contains 13 guided tasks for the ML2++ editor and uses a prepared T
 - [Complete questionnaire-instrument appendix](../../questionnaires/questionnaire_instruments.tex)
 
 The respondent-level public file contains the 40 analysed rows for structured analytical variables used in the principal Stage 4 numerical summaries. Direct identifiers, timestamps/exact dates, quasi-identifying background/context fields, and fields permitting verbatim free-text responses are excluded; public IDs and row order do not preserve the administered identifiers or original submission sequence. Aggregate demographic/context counts and qualitative summaries remain in the aggregate evidence.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+The existing navigation page for the guided quick-start study and its linked instruments and tables.
+
+[Parent folder](../) · [Repository overview](../../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+This directory currently contains its README only. The existing text above explains the intended role of this documentation area.
+
+<!-- END FOLDER GUIDE -->

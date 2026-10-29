@@ -64,3 +64,23 @@ A RAG answer can fail because the retriever selected the wrong context, or becau
 ## Interview answer
 
 > I evaluate RAG at two levels. For retrieval I use Hit Rate@K, Precision@K, Recall@K, MRR and latency. For generated answers I check groundedness, answer relevance and citation correctness. I keep retrieval and generation evaluation separate because they fail for different reasons.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+The existing evaluation questions and scripts for retrieval and generated-answer checks.
+
+[Parent folder](../) · [Repository overview](../../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [evaluate_generation.py](evaluate_generation.py) | Generated-answer evaluation script. |
+| [evaluate_retrieval.py](evaluate_retrieval.py) | Retrieval evaluation script. |
+| [questions.json](questions.json) | The question set used by the RAG evaluation scripts. |
+
+**Start here:** [evaluate_generation.py](evaluate_generation.py).
+
+<!-- END FOLDER GUIDE -->

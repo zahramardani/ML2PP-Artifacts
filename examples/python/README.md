@@ -42,3 +42,25 @@ The split is chronological. Scaling is fitted on training data only.
 Synthetic outputs must never be presented as the dissertation's reported
 experimental results.
 
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+Python reference workflows, configuration files and tests for the river, energy and solar examples.
+
+[Parent folder](../) · [Repository overview](../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [configs/](configs/) | YAML settings used by the three Python reference workflows. |
+| [ml2pp_reference/](ml2pp_reference/) | Python helper modules used by the runnable companion workflows. |
+| [tests/](tests/) | Automated checks for the Python companion implementation. |
+| [requirements.txt](requirements.txt) | Python dependency list for this component. |
+| [run_usecase.py](run_usecase.py) | Command-line runner for the Python forecasting companions. |
+
+**Start here:** [run_usecase.py](run_usecase.py).
+
+<!-- END FOLDER GUIDE -->

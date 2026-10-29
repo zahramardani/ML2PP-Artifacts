@@ -179,3 +179,30 @@ Use this repository when discussing:
 - ML/LLM evaluation
 
 **Project owner:** Zahra Mardani Korani
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+The document-retrieval API, optional generated answers, sample documents, evaluation scripts and tests.
+
+[Parent folder](../) · [Repository overview](../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [app/](app/) | The FastAPI endpoints and document-loading, chunking, retrieval and prompt-building implementation. |
+| [data/](data/) | The local document collection supplied for the retrieval demonstration. |
+| [evaluation/](evaluation/) | The existing evaluation questions and scripts for retrieval and generated-answer checks. |
+| [tests/](tests/) | Tests for document retrieval, chunking and evaluation helpers. |
+| [.env.example](.env.example) | Example environment-variable configuration. |
+| [.gitignore](.gitignore) | Patterns excluding local caches, environments or generated outputs from new commits. |
+| [Dockerfile](Dockerfile) | Container-image build instructions for this application. |
+| [INTERVIEW_NOTES_FA.md](INTERVIEW_NOTES_FA.md) | Persian explanation notes supplied with the portfolio example. |
+| [requirements-semantic.txt](requirements-semantic.txt) | Optional dependencies for semantic retrieval. |
+| [requirements.txt](requirements.txt) | Python dependency list for this component. |
+
+**Start here:** [app/](app/).
+
+<!-- END FOLDER GUIDE -->

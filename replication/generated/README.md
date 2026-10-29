@@ -7,3 +7,15 @@ and runtime-integration sources where applicable.
 Do not silently correct a generated file. If a correction is necessary,
 preserve the generated original and store the correction separately as a
 patch or reference implementation with an explicit provenance label.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+Existing instructions for organizing generator output and its provenance.
+
+[Parent folder](../) · [Repository overview](../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+This directory currently contains its README only. The existing text above explains the intended role of this documentation area.
+
+<!-- END FOLDER GUIDE -->

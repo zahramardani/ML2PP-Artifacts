@@ -34,3 +34,22 @@ The RAG Copilot supports retrieval without a paid API. Generated answers require
 ## Scope
 
 These are small portfolio prototypes with their own tests and CI workflows. Deployment manifests show packaging approaches; they do not establish that a managed cloud service was deployed. Demonstration outputs remain separate from ML2++ dissertation evidence.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+Application prototypes with their own setup guides, dependencies and tests, alongside the research artifacts.
+
+[Parent folder](../) · [Repository overview](../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [ai-microservice-demo/](ai-microservice-demo/) | The FastAPI anomaly-detection demonstration, database integration, Go gateway and deployment packaging. |
+| [ml2pp-rag-copilot/](ml2pp-rag-copilot/) | The document-retrieval API, optional generated answers, sample documents, evaluation scripts and tests. |
+
+**Start here:** [ai-microservice-demo/](ai-microservice-demo/).
+
+<!-- END FOLDER GUIDE -->

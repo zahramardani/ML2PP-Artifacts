@@ -66,3 +66,36 @@ Standalone questionnaire instruments may be placed in `questionnaires/`. Partici
 ## Package scope
 
 The public package is organised around the six Chapter 5 configurations and their dissertation evidence. Run-level identity and provenance are recorded through model specifications, run identifiers, generated-script and dataset hashes, retained quantitative evidence, and verification manifests.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+The research-package instructions, configuration inventory, run folders, study material and manifest utilities.
+
+[Parent folder](../) · [Repository overview](../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [data/](data/) | Existing instructions for documenting research inputs, source terms and data provenance. |
+| [docs/](docs/) | Data-protection guidance and the index connecting generator implementation sources to the research package. |
+| [empirical/](empirical/) | Documentation for interpreting and accessing empirical-study material. |
+| [environment/](environment/) | Existing notes about the software environment and dependency-template file. |
+| [generated/](generated/) | Existing instructions for organizing generator output and its provenance. |
+| [logs/](logs/) | Existing instructions for recording generation and execution commands and logs. |
+| [manifests/](manifests/) | The JSON schema describing the structure of a run manifest. |
+| [models/](models/) | Existing documentation about the research model specifications and their organization. |
+| [questionnaires/](questionnaires/) | The deposited questionnaire instrument source, quick-start tutorial and existing Stage 4 response and aggregate tables. |
+| [results/](results/) | The deposited reported-metrics table and existing result-provenance documentation. Numerical values and research wording are retained. |
+| [runs/](runs/) | The six per-configuration folders that separate model, data, environment, generated-source, log and result documentation. |
+| [scripts/](scripts/) | Scripts for creating and verifying manifests, initializing run folders and exporting questionnaire material. |
+| [studies/](studies/) | Navigation to the staged participant study and the Stage 4 quick-start study. |
+| [ARTIFACT_INVENTORY.csv](ARTIFACT_INVENTORY.csv) | Existing inventory of the six documented forecasting configurations. |
+| [PACKAGE_STATUS.json](PACKAGE_STATUS.json) | Existing machine-readable research-package status record. |
+| [UPLOAD_TO_GITHUB.md](UPLOAD_TO_GITHUB.md) | Existing instructions for uploading research artifacts. |
+
+**Start here:** [data/](data/).
+
+<!-- END FOLDER GUIDE -->

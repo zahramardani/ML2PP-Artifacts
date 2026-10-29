@@ -44,3 +44,24 @@ updated.
 Do not commit direct participant identifiers, unredacted free-text answers,
 session recordings, or directly identifying participant-level logs without
 documented consent and a data-protection review.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+The deposited questionnaire instrument source, quick-start tutorial and existing Stage 4 response and aggregate tables.
+
+[Parent folder](../) · [Repository overview](../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [questionnaire_instruments.tex](questionnaire_instruments.tex) | LaTeX source of the deposited questionnaire instruments. |
+| [stage4_questionnaire_public_aggregate.csv](stage4_questionnaire_public_aggregate.csv) | The deposited Stage 4 aggregate response table. |
+| [stage4_questionnaire_public_deidentified_responses.csv](stage4_questionnaire_public_deidentified_responses.csv) | The deposited Stage 4 de-identified response table. |
+| [stage4_quick_start_tutorial.pdf](stage4_quick_start_tutorial.pdf) | The deposited Stage 4 quick-start tutorial. |
+
+**Start here:** [questionnaire_instruments.tex](questionnaire_instruments.tex).
+
+<!-- END FOLDER GUIDE -->

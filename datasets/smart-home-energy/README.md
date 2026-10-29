@@ -42,3 +42,23 @@ The processed target is household power use in kW. It is not humidity and is not
 The superseded CSV must not be used as household-energy evidence. Numerical forecasting results produced from that file require rerunning on the corrected `use [kW]` dataset before they can be described as household-energy forecasting results.
 
 `use_case_2_smart_home_energy.pdf` has been regenerated from the corrected target definition and provenance.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+The Smart Energy preprocessing script, checksum record and data card. Use the existing dataset documentation for the target definition and reconstruction procedure.
+
+[Parent folder](../) · [Repository overview](../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [preprocess_smart_home.py](preprocess_smart_home.py) | Existing Smart Energy dataset reconstruction and documentation script. |
+| [use_case_2_smart_home_energy.csv.sha256](use_case_2_smart_home_energy.csv.sha256) | SHA-256 digest record for the named dataset file. |
+| [use_case_2_smart_home_energy.pdf](use_case_2_smart_home_energy.pdf) | Existing PDF data card for this use-case dataset. |
+
+**Start here:** [preprocess_smart_home.py](preprocess_smart_home.py).
+
+<!-- END FOLDER GUIDE -->

@@ -20,3 +20,22 @@ The supplied file contained six non-daily test rows dated 9 July 2025 and three 
 The processed file does not retain the station codes or measurement unit. The intended scenario mentions Albufeira da Aguieira (11H/01A), Albufeira da Raiva (12H/01A), Albufeira de Fronhas (12I/01A), and Acude Ponte de Coimbra (12G/01AE), but no `disch`-column-to-station mapping is claimed.
 
 The thesis narrative describes the third series as target, while an inspected executable listing declares `output_features disch2`. This must be resolved before claiming exact target-level reproduction. The PDF data card documents the issue explicitly.
+
+
+<!-- BEGIN FOLDER GUIDE -->
+## Folder guide
+
+The deposited river-flow CSV and its existing data card and provenance documentation.
+
+[Parent folder](../) · [Repository overview](../../README.md) · [All projects](https://github.com/zahramardani/ML2PP-Artifacts/blob/main/PROJECTS.md)
+
+### Contents
+
+| Item | What it is |
+|---|---|
+| [use_case_1_river_flow.pdf](use_case_1_river_flow.pdf) | Existing PDF data card for this use-case dataset. |
+| [use_case_1_river_flow_observed.csv](use_case_1_river_flow_observed.csv) | The deposited CSV data table named use_case_1_river_flow_observed.csv. |
+
+**Start here:** [use_case_1_river_flow.pdf](use_case_1_river_flow.pdf).
+
+<!-- END FOLDER GUIDE -->
