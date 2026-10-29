@@ -1,5 +1,13 @@
 # ML2++ RAG Copilot
 
+[Portfolio index](../README.md) · [All projects](../../PROJECTS.md)
+
+Run the commands below from `portfolio/ml2pp-rag-copilot` inside the repository. From the repository root:
+
+```bash
+cd portfolio/ml2pp-rag-copilot
+```
+
 A portfolio-ready **LLM + Retrieval-Augmented Generation (RAG)** service grounded in time-series forecasting and ML2++ documentation.
 
 The goal is to demonstrate practical skills that are frequently requested in AI/ML engineering roles:

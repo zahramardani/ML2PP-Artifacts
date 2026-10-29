@@ -1,5 +1,5 @@
 {
-  "package_status": "complete_public_thesis_artifact_package",
+  "package_status": "public_research_artifacts_with_partial_numerical_replication",
   "generator_revision_referenced": "4253f75e7f3b3f94620d79e672e4db52b477d32c",
   "chapter_5_alignment_date": "2026-08-14",
   "model_specification_coverage": {
@@ -25,16 +25,27 @@
     "reference_specifications": 0,
     "aggregate_metric_rows": 16,
     "questionnaire_instrument_appendix": true,
-    "manifest_tools": true
+    "manifest_tools": true,
+    "retained_chapter_5_model_instances": 6,
+    "retained_text_run_records": 6,
+    "full_run_checksum_lists": 6
   },
-  "public_data_boundary": "No participant-level responses or identifiers are included.",
+  "public_data_boundary": "Study-related PDFs, source archives and de-identified tables are deposited. Filenames and participant IDs do not establish anonymisation or release consent; consult replication/docs/DATA_PROTECTION.md and the study access notices.",
   "public_artifact_scope": [
-    "six Chapter 5 thesis-aligned ML2++ model specifications",
-    "retained run identifiers and execution evidence",
-    "aggregate and horizon-wise quantitative results",
-    "dataset and generated-script provenance hashes",
-    "SHA-256 manifests for retained run directories",
-    "questionnaire instruments and supporting documentation",
-    "public datasets or dataset provenance documentation where redistribution is permitted"
+    "six thesis-transcribed specifications under replication/runs",
+    "six separately retained model instances under generated-artifacts/chapter5-technical-validation/model-instances",
+    "six retained text run records with metadata and quantitative summaries",
+    "six checksum lists identifying files in retained local run directories",
+    "reported metric transcriptions and provenance documentation",
+    "questionnaire instruments, study material and access guidance",
+    "deposited datasets or dataset reconstruction/provenance documentation",
+    "independent reference workflows and portfolio applications"
+  ],
+  "navigation_review_date": "2026-10-29",
+  "replication_limitations": [
+    "Original generated sources, point-level predictions, complete logs and full historical run directories are not all deposited.",
+    "A full-run checksum list is not the same as a deposited run directory with independently verifiable files.",
+    "Thesis-transcribed specifications, retained execution records and synthetic reference workflows have different provenance.",
+    "Dataset-specific provenance and correction notes must be checked before attempting numerical reproduction."
   ]
 }

@@ -1,25 +1,27 @@
 # ML2++ Dissertation Artifact Map
 
-This map connects the public artifacts to the dissertation chapters. It does
-not claim that missing historical execution files have been reconstructed.
+[Research README](README.md) · [Repository guide](docs/REPOSITORY_GUIDE.md)
 
-| Dissertation material | Public artifact |
+This map links to files present in the public repository. It distinguishes retained run records, thesis-transcribed configurations and runnable companions.
+
+| Dissertation topic | Available entry point |
 |---|---|
-| Chapter 4: ML2++ metamodel, architecture, activity view, and workflow | `thesis/figures/` |
-| Chapter 5: river-flow, smart-home energy, and solar-power validation | `replication/runs/` and `thesis/figures/` |
-| Chapter 6: participant studies and Stage 4 evaluation | `replication/questionnaires/` and aggregate evaluation figures in `thesis/figures/` |
-| Complete dissertation source | `thesis/source/ML2PP_Thesis_Final_Submission.tex` |
-| Dissertation bibliography | `thesis/source/ref.bib` |
-| Journal manuscript derived from the dissertation | `publications/sosym/` |
-| Implementation | External pinned repository `micss-lab/ML-QuadratPP` at revision `4253f75e7f3b3f94620d79e672e4db52b477d32c` |
+| Language and generator implementation | [External implementation](https://github.com/micss-lab/ML-QuadratPP) · [generator source index](replication/docs/GENERATOR_SOURCE_INDEX.md) |
+| Three forecasting use cases | [USE_CASES.md](USE_CASES.md) |
+| Chapter 5 model instances and retained evidence | [Technical-validation collection](generated-artifacts/chapter5-technical-validation/README.md) |
+| Chapter 5 thesis-transcribed specifications | [Replication runs](replication/runs/) |
+| Aggregate reported metrics | [Metrics CSV](replication/results/reported_metrics.csv) · [provenance](replication/results/RESULTS_PROVENANCE.md) |
+| Research inputs | [Dataset catalog](datasets/README.md) |
+| User-study instruments and quick-start tutorial | [Questionnaires](replication/questionnaires/README.md) |
+| Staged participant evaluation | [Study directory](replication/studies/study1_eight_participants/README.md) |
+| Runnable forecasting companions | [Python examples](examples/python/README.md) |
+| Dissertation bibliography | [ref.bib](thesis/source/ref.bib) |
+| Journal-publication material | [Publications guide](publications/README.md) · [bibliography](publications/sosym/references.bib) |
 
-## Evidence boundary
+## Availability boundary
 
-The six model configurations in `replication/runs/` are thesis-transcribed
-specifications aligned with the dissertation. They document the reported
-executions but are not substitutes for the original byte-exact generated
-sources, prediction files, logs, dependency locks, and dataset snapshots.
+A complete dissertation source file and a `thesis/figures/` directory are not deposited in the inspected repository snapshot. Earlier documentation mentioning those paths should not be used as a download reference.
 
-No participant identities or raw participant-level responses are included.
-Third-party datasets are referenced through lawful source and acquisition
-instructions rather than redistributed without verified permission.
+The six configurations under `replication/runs/` are thesis transcriptions. Retained execution-model instances and evidence are indexed separately under `generated-artifacts/chapter5-technical-validation/`. Neither text records nor checksum lists substitute for original files that have not been deposited.
+
+Study access and redistribution follow the [data-protection guidance](replication/docs/DATA_PROTECTION.md).

@@ -1,5 +1,13 @@
 # AI Microservice Portfolio Demo
 
+[Portfolio index](../README.md) · [All projects](../../PROJECTS.md)
+
+Run the commands below from `portfolio/ai-microservice-demo` inside the repository. From the repository root:
+
+```bash
+cd portfolio/ai-microservice-demo
+```
+
 A compact portfolio project showing how an ML capability can be packaged as a production-oriented service. It was created to demonstrate skills relevant to modern AI/software engineering roles: REST APIs, Python, relational persistence, containerization, Kubernetes/Helm, CI, testing, basic Go, and optional LLM integration.
 
 ## What it demonstrates
