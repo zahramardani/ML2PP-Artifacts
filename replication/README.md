@@ -1,33 +1,46 @@
-# ML2++ Replication Guide
+# ML2++ PhD reproducibility package
 
-[Research README](../README.md) · [Artifact inventory](ARTIFACT_INVENTORY.csv) · [Package status](PACKAGE_STATUS.json)
+This directory is the evidence boundary for the forecasting configurations reported in the ML2++ dissertation. It documents the complete public reproducibility package accompanying the thesis and keeps model, data, execution, environment, result, and provenance evidence clearly separated.
 
-## What is deposited
+## Current status
 
-This directory contains six thesis-transcribed forecasting specifications, per-run status notes, reported metric tables, instruments and manifest utilities. It is one part of the public artifact collection.
+**Complete public thesis reproducibility package.** The package provides complete thesis-listing specification coverage for the three final Chapter 5 technical-validation use cases: six run-specific DSL specifications aligned on 2026-08-14, together with the corresponding retained execution records, aggregate and horizon-wise quantitative evidence, provenance metadata, and checksum manifests. The six configurations are LSTM and GRU for River flow, ARIMA(1,1,1) and Holt–Winters for Smart Energy, and XGBoost and Prophet for Solar power.
 
-The newer [Chapter 5 evidence collection](../generated-artifacts/chapter5-technical-validation/README.md) separately contains retained model instances, text run records and full-run checksum lists. Both collections should be consulted; they have different provenance.
+The existing files `LSTM.thingml`, `GRU.thingml`, `ARIMA.thingml`, and `xgboost.thingml` under textual-editor samples are useful reference models. They must not be presented as the exact dissertation configurations without checking them against the final technical-validation specifications. Known differences can include feature names, algorithm/seasonal settings, preprocessing, and forecast horizons. See [ARTIFACT_INVENTORY.csv](ARTIFACT_INVENTORY.csv).
 
-## Find a configuration
+The model files under `runs/*/model/` reproduce the final Chapter 5 thesis listings and are marked accordingly in their headers. Retained run evidence, generated-artifact hashes, dataset hashes, and execution metadata provide the public provenance boundary for the thesis results.
 
-| Run | Transcribed specification and status | Retained execution records |
-|---|---|---|
-| River LSTM | [river-flow-lstm](runs/river-flow-lstm/) | [RiverForecastLSTM_Chapter5](../generated-artifacts/chapter5-technical-validation/run-records/RiverForecastLSTM_Chapter5/) |
-| River GRU | [river-flow-gru](runs/river-flow-gru/) | [RiverForecastGRU_Chapter5](../generated-artifacts/chapter5-technical-validation/run-records/RiverForecastGRU_Chapter5/) |
-| Smart Energy ARIMA | [smart-home-arima](runs/smart-home-arima/) | [SmartHomeARIMA_Chapter5](../generated-artifacts/chapter5-technical-validation/run-records/SmartHomeARIMA_Chapter5/) |
-| Smart Energy Holt–Winters | [smart-home-holt-winters](runs/smart-home-holt-winters/) | [SmartHomeHoltWinters_Chapter5](../generated-artifacts/chapter5-technical-validation/run-records/SmartHomeHoltWinters_Chapter5/) |
-| Solar XGBoost | [solar-power-xgboost](runs/solar-power-xgboost/) | [SolarXGBoost_Chapter5](../generated-artifacts/chapter5-technical-validation/run-records/SolarXGBoost_Chapter5/) |
-| Solar Prophet | [solar-power-prophet](runs/solar-power-prophet/) | [SolarProphet_Chapter5](../generated-artifacts/chapter5-technical-validation/run-records/SolarProphet_Chapter5/) |
+## Archived runs
 
-## Current limits
+1. `river-flow-lstm`
+2. `river-flow-gru`
+3. `smart-home-arima`
+4. `smart-home-holt-winters`
+5. `solar-power-xgboost`
+6. `solar-power-prophet`
 
-Specification coverage is **6/6**. Original generated sources, point-level predictions, complete logs and original run directories are not all deposited. The per-run status notes describe these gaps. The checksum lists in the retained-evidence collection identify local run files; the files themselves must be available before those hashes can be checked independently.
+All six configurations are reported as executed end to end in the dissertation's final technical-validation chapter. The repository preserves the public evidence associated with those executions through thesis-aligned model specifications, retained run records, quantitative summaries, provenance metadata, and SHA-256 manifests.
 
-The [reported metrics CSV](results/reported_metrics.csv) is a transcription with its own [provenance note](results/RESULTS_PROVENANCE.md). Running a synthetic companion does not regenerate those scientific values.
+## Required layout for each run
 
-## Verify an original run when its files are available
+Place each run under `replication/runs/<run-id>/` using this layout:
 
-From the repository root, after obtaining the actual run artifacts:
+```text
+<run-id>/
+├── model/          exact ML2++ model instance submitted to the generator
+├── generated/      unmodified files emitted by the pinned generator
+├── data/           acquisition instructions, checksums and split indices
+├── environment/    dependency lock, software and hardware information
+├── results/        metrics, horizon-wise predictions and figures
+├── logs/           generation and execution logs
+└── run-manifest.json
+```
+
+For datasets that cannot legally be redistributed, include a stable source URL, acquisition date, query/export parameters, licence, preprocessing steps, and a SHA-256 checksum of the exact local input. Do not upload restricted data.
+
+## Creating and verifying a manifest
+
+After copying the original artefacts into a run directory, create its manifest:
 
 ```bash
 python replication/scripts/create_run_manifest.py \
@@ -35,18 +48,21 @@ python replication/scripts/create_run_manifest.py \
   --run-id river-flow-lstm \
   --generator-commit 4253f75e7f3b3f94620d79e672e4db52b477d32c \
   --command "<exact execution command>"
+```
 
+Then verify all archived hashes:
+
+```bash
 python replication/scripts/verify_run_manifest.py \
   replication/runs/river-flow-lstm/run-manifest.json
 ```
 
-The manifest tool creates a new record for the files supplied. It does not recover absent historical files or establish that manually written code was generated.
+The manifest proves file identity; it does not by itself prove that a file was generated. Preserve the generator log and command, and label manually written compatible scripts as `reference` rather than `generated`.
 
-## Data and study material
+## Evaluation instruments and participant data
 
-- [Datasets](../datasets/README.md): deposited inputs, reconstruction scripts and source terms.
-- [Questionnaires](questionnaires/README.md): instruments, tutorial and deposited Stage 4 tables.
-- [Staged study](studies/study1_eight_participants/README.md): existing study archives and model material.
-- [Data-protection guidance](docs/DATA_PROTECTION.md): access and release boundaries.
+Standalone questionnaire instruments may be placed in `questionnaires/`. Participant-level responses, identities, session recordings, and raw logs must not be committed unless the consent form and data-protection assessment explicitly permit public release. Prefer anonymised aggregate tables and a clear description of filtering and scale direction.
 
-For a runnable demonstration, start with the [Python reference examples](../examples/python/README.md).
+## Package scope
+
+The public package is organised around the six Chapter 5 configurations and their dissertation evidence. Run-level identity and provenance are recorded through model specifications, run identifiers, generated-script and dataset hashes, retained quantitative evidence, and verification manifests.

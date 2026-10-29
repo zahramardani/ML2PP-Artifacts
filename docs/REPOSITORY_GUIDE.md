@@ -2,45 +2,39 @@
 
 [Research README](../README.md) · [All projects](../PROJECTS.md)
 
-## Directory responsibilities
+This guide adds navigation to the existing repository. Dissertation content, model configurations, datasets, reported results and research-status records retain their original wording and values.
 
-| Directory | Purpose |
+## Research artifacts
+
+| Directory or file | Entry point |
 |---|---|
-| [datasets/](../datasets/) | Deposited research subsets, data cards and acquisition/preprocessing documentation |
-| [generated-artifacts/chapter5-technical-validation/](../generated-artifacts/chapter5-technical-validation/) | Retained Chapter 5 model instances, text evidence and checksum lists |
-| [replication/runs/](../replication/runs/) | Six thesis-transcribed specifications and per-run status |
-| [replication/results/](../replication/results/) | Reported metric transcription and provenance notes |
-| [replication/scripts/](../replication/scripts/) | Manifest creation, verification and package utilities |
-| [replication/questionnaires/](../replication/questionnaires/) | Instruments, tutorial and deposited Stage 4 tables |
-| [replication/studies/](../replication/studies/) | Existing staged-study material |
-| [examples/python/](../examples/python/) | Runnable forecasting companions; synthetic data by default |
-| [portfolio/](../portfolio/) | Independent API, microservice and RAG demonstrations |
-| [publications/](../publications/) | Publication documentation and bibliography |
-| [thesis/source/](../thesis/source/) | Deposited dissertation bibliography |
-| [docs/](../docs/) | Navigation and reading guides |
+| Three forecasting use cases | [USE_CASES.md](../USE_CASES.md) |
+| Existing dissertation artifact map | [ARTIFACT_MAP.md](../ARTIFACT_MAP.md) |
+| Research input documentation | [datasets/README.md](../datasets/README.md) |
+| Chapter 5 model instances and retained evidence | [Technical-validation guide](../generated-artifacts/chapter5-technical-validation/README.md) |
+| Thesis-transcribed configurations | [replication/runs/](../replication/runs/) |
+| Research-package instructions | [replication/README.md](../replication/README.md) |
+| Existing package-status record | [PACKAGE_STATUS.json](../replication/PACKAGE_STATUS.json) |
+| Existing artifact inventory | [ARTIFACT_INVENTORY.csv](../replication/ARTIFACT_INVENTORY.csv) |
+| Reported metrics | [replication/results/](../replication/results/) |
+| Manifest utilities | [replication/scripts/](../replication/scripts/) |
+| Questionnaire instruments and tutorial | [replication/questionnaires/](../replication/questionnaires/) |
+| Staged-study material | [replication/studies/](../replication/studies/) |
+| Publication documentation | [publications/README.md](../publications/README.md) |
+| Deposited dissertation bibliography | [ref.bib](../thesis/source/ref.bib) |
 
-The `language/`, `generators/`, `experiments/`, `evaluation/`, `use-cases/` and `generated-artifacts/` directories also contain historical overview or placeholder documentation. Use this guide and the linked artifact paths to identify actual deposited files.
+For scientific definitions and provenance, read the existing documentation in the linked directory. This navigation guide does not reinterpret results or change the research package's status.
 
-## Reading order
+## Runnable companions and engineering demonstrations
 
-1. Read [USE_CASES.md](../USE_CASES.md) for the research scope.
-2. Inspect the [retained evidence](../generated-artifacts/chapter5-technical-validation/README.md).
-3. Read the relevant [dataset documentation](../datasets/README.md).
-4. Check [replication status](../replication/PACKAGE_STATUS.json) before attempting numerical reconstruction.
-5. Use [Python companions](../examples/python/README.md) for a self-contained workflow demonstration.
-
-## Evidence types
-
-| Material | What it establishes |
+| Area | Guide |
 |---|---|
-| Retained model instance | The deposited model text |
-| Text run record | The recorded metadata, audits and quantitative summaries |
-| Full-run checksum list | The recorded identities of files in the retained local run |
-| Thesis-transcribed specification | A specification aligned with the documented thesis listing |
-| Python companion or portfolio app | An inspectable implementation with its own stated scope |
+| Python forecasting companions | [examples/python/README.md](../examples/python/README.md) |
+| Independent API and RAG applications | [portfolio/README.md](../portfolio/README.md) |
+| Account-wide project catalog | [PROJECTS.md](../PROJECTS.md) |
 
-A checksum for an absent file does not provide that file. A runnable synthetic demonstration does not reproduce the dissertation's numerical results.
+Follow each application's own setup guide and working directory. Companion and portfolio outputs keep the scope already stated in their existing documentation.
 
 ## Path stability
 
-Legacy run IDs and paths such as `smart-home-energy` remain stable. Human-readable documentation may use **Smart Energy**. Reference paths should be checked against the deposited files before being cited.
+Existing directory names, model identifiers and artifact paths are retained. Human-readable documentation may use **Smart Energy**, while stable technical paths include `smart-home-energy`.

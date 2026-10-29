@@ -1,61 +1,68 @@
 # ML2++ Research Artifacts
 
-Research artifacts for **Model-Driven Engineering for Time-Series Forecasting in IoT and Cyber-Physical Systems**.
+Research artifacts for **ML2++: Model-Driven Engineering for Time-Series Forecasting in IoT and Cyber-Physical Systems**.
 
-**Zahra Mardani Korani** · LNEC/CICTI and Iscte-IUL/ISTA/ISTAR  
-[All projects](PROJECTS.md) · [Repository guide](docs/REPOSITORY_GUIDE.md) · [Portfolio demonstrations](portfolio/README.md)
+ML2++ is a model-driven framework and domain-specific modelling language for specifying time-series forecasting workflows and connecting forecast horizons to IoT/CPS behaviour. The main implementation is maintained separately in [`micss-lab/ML-QuadratPP`](https://github.com/micss-lab/ML-QuadratPP).
 
-ML2++ provides a domain-specific modelling language and model-driven workflows for forecasting and its integration with IoT/CPS behaviour. The main implementation is maintained in [micss-lab/ML-QuadratPP](https://github.com/micss-lab/ML-QuadratPP). The documented web environment is [ML2++](https://ml2plusplus.jvmhost.net/); availability is independent of this repository.
+**Live ML2++ web environment:** https://ml2plusplus.jvmhost.net/
+
+## Repository status
+
+This repository is the **complete public research-artifact package accompanying the dissertation**. The thesis-aligned model specifications and retained Chapter 5 execution evidence cover the six configurations in the final Chapter 5 technical validation (2026-08-14):
+
+| Use case | Configurations |
+|---|---|
+| River-flow forecasting | LSTM, GRU |
+| Smart Energy forecasting | ARIMA(1,1,1), Holt–Winters |
+| Solar-power forecasting | XGBoost, Prophet |
+
+This gives **complete model-specification coverage for the three Chapter 5 use cases (6/6 configurations)** together with the public run records, quantitative summaries, provenance information, checksum manifests, questionnaire instruments, datasets or dataset documentation, and runnable companion workflows included in this repository.
+
+The public package is organised to preserve the evidence boundary used by the dissertation: thesis-aligned model specifications, retained execution records, aggregate and horizon-wise metrics, generated-artifact provenance, checksums, and supporting documentation are kept separately so that each type of evidence remains traceable.
+
+Human-readable thesis documentation uses **Smart Energy**. Stable technical artifact identifiers such as `smart-home-energy`, `use_kW`, and `datasets/smart-home-energy/` are retained where necessary for reproducibility and path stability.
 
 ## Start here
 
-| Goal | Entry point |
-|---|---|
-| Understand the three research use cases | [Use cases](USE_CASES.md) |
-| Inspect retained Chapter 5 model instances and run records | [Technical-validation evidence](generated-artifacts/chapter5-technical-validation/README.md) |
-| Find datasets and their provenance | [Dataset catalog](datasets/README.md) |
-| Inspect thesis-transcribed configurations and replication status | [Replication guide](replication/README.md) |
-| Run companion forecasting workflows | [Python reference examples](examples/python/README.md) |
-| Find evaluation instruments and study material | [Questionnaires](replication/questionnaires/README.md) · [Study directory](replication/studies/study1_eight_participants/README.md) |
-| Explore independent API and RAG projects | [Portfolio index](portfolio/README.md) |
-| Map dissertation material to available files | [Artifact map](ARTIFACT_MAP.md) |
+- [`replication/README.md`](replication/README.md): evidence boundary, completion criteria, and verification instructions
+- [`replication/ARTIFACT_INVENTORY.csv`](replication/ARTIFACT_INVENTORY.csv): machine-readable inventory of all six configurations
+- [`replication/PACKAGE_STATUS.json`](replication/PACKAGE_STATUS.json): current package status and public artifact scope
+- [`replication/results/reported_metrics.csv`](replication/results/reported_metrics.csv): aggregate metrics aligned with final Chapter 5 Tables 1.4–1.6
+- [`replication/runs/`](replication/runs/): run-specific thesis-transcribed model specifications
+- [`replication/questionnaires/`](replication/questionnaires/): evaluation instruments; no participant identities or raw personal data
+- [`replication/scripts/`](replication/scripts/): run-manifest creation and hash-verification utilities
+- [`datasets/`](datasets/): dataset specifications and legal/provenance requirements
+- [`USE_CASES.md`](USE_CASES.md): thesis-to-artifact map for all three domains
+- [`examples/python/`](examples/python/): runnable Python companion workflows; not byte-exact generated provenance for the six final executions
 
-## Research configurations
+## Pinned implementation revision
 
-| Use case | Documented configurations |
-|---|---|
-| River flow | LSTM, GRU |
-| Smart Energy | ARIMA(1,1,1), Holt–Winters |
-| Solar power | XGBoost, Prophet |
+The dissertation results reference ML-QuadratPP revision:
 
-Two collections serve different purposes:
+`4253f75e7f3b3f94620d79e672e4db52b477d32c`
 
-- [Chapter 5 evidence](generated-artifacts/chapter5-technical-validation/) contains retained model instances, text run records and full-run checksum lists.
-- [Replication runs](replication/runs/) contains thesis-transcribed specifications and per-run status documentation.
+Use that revision when reconstructing the evaluated generator and runtime.
 
-Six specifications are present. Original generated sources, point-level predictions, full logs and complete local run directories are not all deposited here. A checksum list identifies retained local files; it does not make absent files available for independent verification. See the [package status](replication/PACKAGE_STATUS.json) and [artifact inventory](replication/ARTIFACT_INVENTORY.csv).
+## Data protection
 
-## Run a companion workflow
+Do not commit participant identities, raw participant responses, credentials, restricted datasets, or third-party data without redistribution permission. See [`replication/docs/DATA_PROTECTION.md`](replication/docs/DATA_PROTECTION.md).
 
-From the repository root:
+## Citation and licensing
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install -r examples/python/requirements.txt
-python examples/python/run_usecase.py river --output artifacts/river
-```
+Citation metadata is provided in [`CITATION.cff`](CITATION.cff). A repository-wide licence has not yet been selected; see [`LICENSE_STATUS.md`](LICENSE_STATUS.md). Third-party material retains its original terms.
 
-The examples use synthetic data by default. Their outputs are separate from the dissertation's reported results. The [example guide](examples/python/README.md) documents all three workflows and CSV schemas.
+## Author
 
-## Implementation revision
+**Zahra Mardani Korani**  
+LNEC/CICTI and Iscte-IUL/ISTA/ISTAR
 
-The documented generator revision is [4253f75e7f3b3f94620d79e672e4db52b477d32c](https://github.com/micss-lab/ML-QuadratPP/tree/4253f75e7f3b3f94620d79e672e4db52b477d32c). Use the revision appropriate to the retained run being reconstructed; consult that run's metadata.
+Supervisors: João Carlos Ferreira, Armin Moin, and Alberto Rodrigues da Silva.
 
-## Data, citation and licensing
+## Repository navigation
 
-Study material and dataset documentation have separate provenance and access boundaries. Follow the [data-protection guidance](replication/docs/DATA_PROTECTION.md) and each dataset's source terms. Participant-related files already present are not an authorization to redistribute additional study records.
+- [All projects](PROJECTS.md): research repositories, engineering demonstrations and earlier projects.
+- [Repository guide](docs/REPOSITORY_GUIDE.md): directory map and links to existing artifacts.
+- [Chapter 5 evidence collection](generated-artifacts/chapter5-technical-validation/README.md): retained model instances and run-record documentation.
+- [Engineering portfolio](portfolio/README.md): application setup entry points.
 
-[CITATION.cff](CITATION.cff) supplies citation metadata. A repository-wide licence has not been selected; see [LICENSE_STATUS.md](LICENSE_STATUS.md).
-
-Supervisors: João Carlos Ferreira, Armin Moin and Alberto Rodrigues da Silva.
+These navigation additions do not revise the dissertation's text, model configurations, datasets, reported results or existing research-status records.

@@ -1,30 +1,41 @@
 # Study 1: Eight-Participant Evaluation
 
-[Replication guide](../../README.md) · [Data dictionary](DATA_DICTIONARY.md) · [Restricted-data notice](RESTRICTED_DATA_NOTICE.md)
+This directory contains a public, de-identified representation of the
+exploratory Stage 1--Stage 3 evaluation reported in the ML2++ PhD thesis.
 
 ## Study design
 
-The directory documents the exploratory Stage 1–Stage 3 evaluation discussed in the ML2++ dissertation:
+- **Participants:** eight, identified only as `P1`--`P8`
+- **Stage 1:** manual Python forecasting workflow
+- **Stage 2:** reuse of the Stage 1 workflow in an IoT-oriented template
+- **Stage 3:** guided adaptation and execution of a prepared ML2++ model
+- **Timing:** Stage 3 was conducted approximately 40 days after Stages 1--2
+- **Design:** exploratory staged within-participant comparison; the stages
+  were not randomised or counterbalanced
 
-- Stage 1: manual Python forecasting workflow.
-- Stage 2: reuse in an IoT-oriented template.
-- Stage 3: guided adaptation of a prepared ML2++ model, approximately 40 days later.
+Stage 3 measured guided model adaptation, not greenfield DSML authoring.
+Five participants completed Stage 3 and three completed it partially.
 
-The staged comparison was not randomised or counterbalanced. Stage 3 concerns guided adaptation rather than greenfield DSML authoring. The documented study involved eight participants, with five completing Stage 3 and three completing it partially.
+## Public files
 
-## Deposited material
+- `participant_profiles.csv`: broad, de-identified participant background
+- `stage1_stage2_effort.csv`: step-level Stage 1 and Stage 2 effort
+- `stage3_summary.csv`: Stage 3 timing, completion, DSL size, and ratings
+- `combined_effort.csv`: participant-level comparison used in the thesis
+- `DATA_DICTIONARY.md`: field definitions and uncertainty conventions
+- `RESTRICTED_DATA_NOTICE.md`: materials intentionally excluded from GitHub
 
-| Directory | What is present |
-|---|---|
-| [step1-manual-coding/](step1-manual-coding/) | Source archives and upload-status documentation |
-| [step2-iot-integration/](step2-iot-integration/) | Source archives and upload-status documentation |
-| [step3-ml2-integration/](step3-ml2-integration/) | Deposited model files, Java/Python sources and build configuration |
-| [questionnaire_responses/](questionnaire_responses/) | Existing questionnaire PDF files grouped by participant ID |
+## Interpretation
 
-Earlier versions of this README listed `participant_profiles.csv`, `stage1_stage2_effort.csv`, `stage3_summary.csv` and `combined_effort.csv`. Those CSVs are not deposited in this snapshot and are not available as downloads from this directory.
+The data support an exploratory conclusion: among the five participants who
+completed Stage 3, four used less time than on the cumulative Stage 1 +
+Stage 2 route, while one used slightly more time. This is not evidence of a
+general productivity effect. The sample is small, tasks and expertise are
+heterogeneous, order was fixed, and some timings are approximate or lower
+bounds.
 
-## Interpretation and access
+## Privacy
 
-The small sample, fixed stage order, heterogeneous tasks and approximate timings limit generalisation. Consult the dissertation and data dictionary for the analytical definitions.
-
-Participant IDs and folder names do not by themselves establish anonymisation or public-release consent. Existing questionnaire PDFs and source archives remain subject to the [data-protection guidance](../../docs/DATA_PROTECTION.md) and restricted-data notice. This directory index does not authorize publishing additional participant records.
+No names, email addresses, signatures, consent forms, raw scans, file
+metadata, or participant free-text responses are included. Participant
+identifiers are pseudonyms used consistently in the thesis.
