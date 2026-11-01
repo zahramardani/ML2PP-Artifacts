@@ -103,3 +103,43 @@ The repository entry point for ML2++ research artifacts, forecasting use cases, 
 **Start here:** [PROJECTS.md](PROJECTS.md).
 
 <!-- END FOLDER GUIDE -->
+
+## Framework overview
+
+ML2++ addresses a practical engineering problem: forecasting decisions are often scattered across scripts, configuration files and application code. The framework brings those decisions into a domain-specific model so that the forecasting workflow can be inspected alongside the structure and behaviour of an IoT/CPS application.
+
+Building on ThingML and ML-Quadrat (ML2), the approach connects a shared metamodel, textual and graphical modelling, validation and model-to-text transformations. Its forecasting contribution includes explicit temporal configuration and the binding of forecast values to runtime properties. The dissertation distinguishes inherited foundations, forecasting extensions and collaborative editor contributions.
+
+### From specification to execution
+
+| Workflow area | What the model describes |
+|---|---|
+| Data | Dataset references, timestamps, input features and output variables |
+| Preprocessing | Data preparation choices, including missing-value handling |
+| Time series | Input history, temporal representation and forecast horizon |
+| Model | Forecasting algorithm and configuration |
+| Evaluation | Metrics and the evaluation context |
+| Visualisation | Plots used to inspect data, predictions and errors |
+
+The modelling workflow proceeds from specification and validation to generated artefacts for preprocessing, training, prediction, evaluation and visualisation. Forecast outputs can then be associated with application properties used by IoT/CPS behaviour. Available constructs and their execution support must be interpreted using the dissertation's implementation-status convention; a declared language feature is not, by itself, evidence of a validated execution.
+
+### Reading this repository alongside the dissertation
+
+| Dissertation section | Reading goal | Repository entry point |
+|---|---|---|
+| Chapter 4 — Proposed Approach | Understand the language, architecture, temporal semantics and runtime prediction binding | [Use-case and language overview](USE_CASES.md) and the pinned implementation identified above |
+| Chapter 5 — Technical Validation | Inspect the river-flow, Smart Energy and solar-power configurations and retained evidence | [Configuration inventory](replication/ARTIFACT_INVENTORY.csv), [run folders](replication/runs/) and [reported metrics](replication/results/reported_metrics.csv) |
+| Chapter 6 — Evaluation | Understand the exploratory development stages and guided Quick-Start evaluation | [Questionnaire instruments](replication/questionnaires/) and the dissertation's study procedures and interpretation limits |
+| Practical exploration | Inspect companion workflows and follow their component-specific setup instructions | [Python examples](examples/python/) and [repository guide](docs/REPOSITORY_GUIDE.md) |
+
+The dissertation evaluates both technical feasibility and the experience of using the modelling approach. Its exploratory development study and guided first-use study answer different questions; descriptive time comparisons should not be read as causal productivity estimates.
+
+### How to inspect the evidence
+
+1. Select a use case and configuration in the inventory.
+2. Read its model specification together with the corresponding run documentation.
+3. Check the reported metrics, available provenance and checksum information.
+4. Use the pinned implementation revision when investigating the evaluated generator.
+5. Follow a companion example's own instructions when exploring an executable workflow.
+
+Model-specification coverage, retained execution evidence and a fresh numerical reproduction are distinct. Consult the run-level records and replication guidance before making a reproducibility claim. The independent engineering demonstrations are described separately and do not establish new dissertation results.
